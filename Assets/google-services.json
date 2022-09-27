@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "677262131883",
+    "project_id": "isched-app",
+    "storage_bucket": "isched-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677262131883:android:c909d93eb4337e227d2dee",
+        "android_client_info": {
+          "package_name": "com.Echo.iSched"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677262131883-4rv9lq0e34q4dfa5q0cv4ebq8h3p1vlg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTqkjwcRKsN_M0ni3oKVLOlnuYlFwJl2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677262131883-4rv9lq0e34q4dfa5q0cv4ebq8h3p1vlg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "677262131883-6132d5b8hn09v13dhb9rqp01vo53j8vr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Echo.iSched"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

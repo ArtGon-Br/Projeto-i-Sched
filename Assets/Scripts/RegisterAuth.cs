@@ -76,13 +76,33 @@ public class RegisterAuth : MonoBehaviour
         if(FirebaseAuthenticator.instance.User != null){
             UserProfile profile  = new UserProfile{DisplayName = displayName};
             var ProfileTask = FirebaseAuthenticator.instance.User.UpdateUserProfileAsync(profile);
+
             yield return new WaitUntil (predicate: () => ProfileTask.IsCompleted);
 
             if(ProfileTask.Exception != null){
                 HandleProfileCreationErrors(ProfileTask.Exception);
             }else{
                 Debug.Log("User set successfully");
+                SendEmailToUser(FirebaseAuthenticator.instance.User);
             }
+        }
+
+        void SendEmailToUser(FirebaseUser user)
+        {
+            user.SendEmailVerificationAsync().ContinueWith(task => {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("SendEmailVerificationAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("SendEmailVerificationAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Debug.Log("Email sent successfully.");
+            });
         }
 
         void HandleProfileCreationErrors(System.AggregateException profileException){

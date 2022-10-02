@@ -10,8 +10,6 @@ public class LoginAuth : MonoBehaviour
     public TMP_InputField emailInputfield, passwordInputfield;
     public TMP_Text warningLoginText, confirmLoginText;
     public GameObject verifyEmailMessage;
-
-    public Transform canvas;
     
     public void LoginButton(){
         StartCoroutine(StartLogin(emailInputfield.text, passwordInputfield.text));

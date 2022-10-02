@@ -9,6 +9,9 @@ public class LoginAuth : MonoBehaviour
 {
     public TMP_InputField emailInputfield, passwordInputfield;
     public TMP_Text warningLoginText, confirmLoginText;
+    public GameObject verifyEmailMessage;
+
+    public Transform canvas;
     
     public void LoginButton(){
         StartCoroutine(StartLogin(emailInputfield.text, passwordInputfield.text));
@@ -18,9 +21,8 @@ public class LoginAuth : MonoBehaviour
         var LoginTask = FirebaseAuthenticator.instance.auth.SignInWithEmailAndPasswordAsync(email, password);
         yield return new WaitUntil(predicate: ()=> LoginTask.IsCompleted);
 
-        if(LoginTask.Exception != null){
+        if (LoginTask.Exception != null){
             HandleLoginErrors(LoginTask.Exception);
-
         }
         else{
             LoginUser(LoginTask);
@@ -48,13 +50,24 @@ public class LoginAuth : MonoBehaviour
                 return "Invalid password";
             case AuthError.UserNotFound:
                 return "Account does not exist";
+            case AuthError.UnverifiedEmail:
+                return "Not Verified email. Please Verify it.";
             default:
                 return "The error could not be found";
         }
     }
 
     void LoginUser(System.Threading.Tasks.Task<Firebase.Auth.FirebaseUser> loginTask){
-        FirebaseAuthenticator.instance.User = loginTask.Result; 
+        FirebaseAuthenticator.instance.User = loginTask.Result;
+
+        if (!FirebaseAuthenticator.instance.User.IsEmailVerified) 
+        {
+            Debug.Log(DefineLoginErrorMessage(AuthError.UnverifiedEmail));
+
+            verifyEmailMessage.SetActive(true);
+            return;
+        }
+
         Debug.LogFormat("User Signed in successfully: {0} {1}", FirebaseAuthenticator.instance.User.DisplayName, FirebaseAuthenticator.instance.User.Email);
         warningLoginText.text = "";
         confirmLoginText.text = "Successfully";

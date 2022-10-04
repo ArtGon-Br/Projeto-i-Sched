@@ -1,28 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Firebase;
 using Firebase.Auth;
 using TMPro;
 
 public class LoginAuth : MonoBehaviour
 {
+    [SerializeField] TMP_Text messageBox;
+    [SerializeField] GameObject loginButton;
+    [SerializeField] GameObject loadingCircle;
+    [Space]
+    [SerializeField] UnityEvent OnSuccesfullyLogged;
+
     public TMP_InputField emailInputfield, passwordInputfield;
-    public TMP_Text warningLoginText, confirmLoginText;
-    public GameObject verifyEmailMessage;
-    
+    //public TMP_Text warningLoginText, confirmLoginText;
+    //public GameObject verifyEmailMessage;
+
+    private void Awake()
+    {
+        messageBox.enabled = false;
+        loadingCircle.SetActive(false);
+    }
+
+    void LogMessage(string message)
+    {
+        messageBox.enabled = true;
+        messageBox.text = message;
+    }
+
     public void LoginButton(){
         StartCoroutine(StartLogin(emailInputfield.text, passwordInputfield.text));
     }
 
     private IEnumerator StartLogin(string email, string password){
+        
         var LoginTask = FirebaseAuthenticator.instance.auth.SignInWithEmailAndPasswordAsync(email, password);
+
+        // animar loading
+        loginButton.SetActive(false);
+        loadingCircle.SetActive(true);
+
         yield return new WaitUntil(predicate: ()=> LoginTask.IsCompleted);
 
-        if (LoginTask.Exception != null){
+        loadingCircle.SetActive(false);
+
+        if (LoginTask.Exception != null)
+        {
             HandleLoginErrors(LoginTask.Exception);
+            loginButton.SetActive(true);
         }
-        else{
+        else
+        {
             LoginUser(LoginTask);
         }
     }
@@ -31,8 +61,8 @@ public class LoginAuth : MonoBehaviour
         Debug.LogWarning(message: $"failed to login task with {loginException}");
         FirebaseException firebaseEx = loginException.GetBaseException() as FirebaseException;
         AuthError errorCode = (AuthError)firebaseEx.ErrorCode;
-        
-        warningLoginText.text = DefineLoginErrorMessage(errorCode);
+
+        LogMessage(DefineLoginErrorMessage(errorCode));
     }
 
     string DefineLoginErrorMessage(AuthError errorCode){
@@ -43,9 +73,9 @@ public class LoginAuth : MonoBehaviour
             case AuthError.MissingPassword:
                 return "Missing Password";
             case AuthError.InvalidEmail:
-                return "Invalid Email";
+                return "Invalid e-mail or password";
             case AuthError.WrongPassword:
-                return "Invalid password";
+                return "Invalid e-mail or password";
             case AuthError.UserNotFound:
                 return "Account does not exist";
             case AuthError.UnverifiedEmail:
@@ -60,14 +90,20 @@ public class LoginAuth : MonoBehaviour
 
         if (!FirebaseAuthenticator.instance.User.IsEmailVerified) 
         {
-            Debug.Log(DefineLoginErrorMessage(AuthError.UnverifiedEmail));
-
-            verifyEmailMessage.SetActive(true);
+            LogMessage(DefineLoginErrorMessage(AuthError.UnverifiedEmail));
+            loginButton.SetActive(true);
             return;
         }
 
         Debug.LogFormat("User Signed in successfully: {0} {1}", FirebaseAuthenticator.instance.User.DisplayName, FirebaseAuthenticator.instance.User.Email);
-        warningLoginText.text = "";
-        confirmLoginText.text = "Successfully";
+
+        // Printa mensagem de sucesso e chama função para logar
+        LogMessage("Successfully logged!");
+        Invoke("GoToMainPage", 1f);
+    }
+
+    void GoToMainPage()
+    {
+        OnSuccesfullyLogged.Invoke();
     }
 }

@@ -6,7 +6,7 @@ public class CreateUserUI : MonoBehaviour
     [SerializeField] string username;
     [SerializeField] string password;
 
-    private void Start()
+    private void CreateUser()
     {
         firestoreManager.CreateUser(username, password);
     }

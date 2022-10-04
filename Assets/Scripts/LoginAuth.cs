@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Firebase;
@@ -15,8 +14,6 @@ public class LoginAuth : MonoBehaviour
     [SerializeField] UnityEvent OnSuccesfullyLogged;
 
     public TMP_InputField emailInputfield, passwordInputfield;
-    //public TMP_Text warningLoginText, confirmLoginText;
-    //public GameObject verifyEmailMessage;
 
     private void Awake()
     {
@@ -69,19 +66,19 @@ public class LoginAuth : MonoBehaviour
         switch (errorCode)
         {
             case AuthError.MissingEmail:
-                return "Missing Email";
+                return "E-mail não preenchido";
             case AuthError.MissingPassword:
-                return "Missing Password";
+                return "Senha não preenchida";
             case AuthError.InvalidEmail:
-                return "Invalid e-mail or password";
+                return "E-mail e/ou senha não conferem";
             case AuthError.WrongPassword:
-                return "Invalid e-mail or password";
+                return "E-mail e/ou senha não conferem";
             case AuthError.UserNotFound:
-                return "Account does not exist";
+                return "Conta não existe";
             case AuthError.UnverifiedEmail:
-                return "Not Verified email. Please Verify it.";
+                return "E-mail não verificado. Por favor verifique seu e-mail.";
             default:
-                return "The error could not be found";
+                return "Erro não especificado";
         }
     }
 
@@ -98,7 +95,7 @@ public class LoginAuth : MonoBehaviour
         Debug.LogFormat("User Signed in successfully: {0} {1}", FirebaseAuthenticator.instance.User.DisplayName, FirebaseAuthenticator.instance.User.Email);
 
         // Printa mensagem de sucesso e chama função para logar
-        LogMessage("Successfully logged!");
+        LogMessage("Logado com sucesso!");
         Invoke("GoToMainPage", 1f);
     }
 

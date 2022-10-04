@@ -3,62 +3,31 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using TMPro;
 
 public class ResetPassword : MonoBehaviour
 {   
-    protected Firebase.Auth.FirebaseAuth auth;
-    private string logText = "";
-    const int kMaxLogSize = 16382;
-    private Vector2 scrollViewVector = Vector2.zero;
+  Firebase.Auth.FirebaseAuth auth;
+  public TMP_InputField emailInputField;
 
-    public string email = "caioabe68@gmail.com";
+  public void SendPasswordResetEmailButton() {
+    SendPasswordResetEmail(emailInputField.text);
+  }
 
-    private void Start()
-    {
-      SendPasswordResetEmail();
-    }
-
-    public void SendPasswordResetEmail() 
-    {
-      auth.SendPasswordResetEmailAsync(email).ContinueWithOnMainThread((authTask) => 
-      {
-        if (LogTaskCompletion(authTask, "Send Password Reset Email")) 
-        {
-          DebugLog("Password reset email sent to " + email);
-        }
-      });
-    }
-
-    bool LogTaskCompletion(Task task, string operation) {
-      bool complete = false;
+  private void SendPasswordResetEmail(string email) 
+  {
+    auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+    auth.SendPasswordResetEmailAsync(email).ContinueWith(task => {
       if (task.IsCanceled) {
-        DebugLog(operation + " canceled.");
-      } else if (task.IsFaulted) {
-        DebugLog(operation + " encounted an error.");
-        foreach (Exception exception in task.Exception.Flatten().InnerExceptions) {
-          string authErrorCode = "";
-          Firebase.FirebaseException firebaseEx = exception as Firebase.FirebaseException;
-          if (firebaseEx != null) {
-            authErrorCode = String.Format("AuthError.{0}: ",
-              ((Firebase.Auth.AuthError)firebaseEx.ErrorCode).ToString());
-          }
-          DebugLog(authErrorCode + exception.ToString());
-        }
-      } else if (task.IsCompleted) {
-        DebugLog(operation + " completed");
-        complete = true;
+        Debug.LogError("SendPasswordResetEmailAsync was canceled.");
+        return;
       }
-      return complete;
-    }
-
-    public void DebugLog(string s) {
-      Debug.Log(s);
-      logText += s + "\n";
-
-      while (logText.Length > kMaxLogSize) {
-        int index = logText.IndexOf("\n");
-        logText = logText.Substring(index + 1);
+      if (task.IsFaulted) {
+        Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
+        return;
       }
-      scrollViewVector.y = int.MaxValue;
-    }
+
+      Debug.Log("Password reset email sent successfully.");
+    });
+  }    
 }

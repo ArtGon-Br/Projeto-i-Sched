@@ -8,21 +8,19 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerProgressBar : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
+        public bool overrideColors = false;
+        public bool overrideFonts = false;
 
         [Header("Resources")]
-        public Image bar;
-        public Image background;
-        public TextMeshProUGUI label;
+        [SerializeField] private Image bar;
+        [SerializeField] private Image background;
+        [SerializeField] private TextMeshProUGUI label;
 
         bool dynamicUpdateEnabled;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 if (UIManagerAsset == null)
@@ -51,16 +49,20 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateProgressBar()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
-                bar.color = UIManagerAsset.progressBarColor;
-                background.color = UIManagerAsset.progressBarBackgroundColor;
-                label.color = UIManagerAsset.progressBarLabelColor;
-                label.font = UIManagerAsset.progressBarLabelFont;
-                label.fontSize = UIManagerAsset.progressBarLabelFontSize;
+                if (overrideColors == false)
+                {
+                    bar.color = UIManagerAsset.progressBarColor;
+                    background.color = UIManagerAsset.progressBarBackgroundColor;
+                    label.color = UIManagerAsset.progressBarLabelColor;
+                }
+
+                if (overrideFonts == false)
+                {
+                    label.font = UIManagerAsset.progressBarLabelFont;
+                    label.fontSize = UIManagerAsset.progressBarLabelFontSize;
+                }
             }
 
             catch { }

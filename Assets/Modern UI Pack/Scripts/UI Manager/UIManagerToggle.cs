@@ -8,21 +8,17 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerToggle : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
 
         [Header("Resources")]
-        public Image border;
-        public Image background;
-        public Image check;
-        public TextMeshProUGUI onLabel;
-        public TextMeshProUGUI offLabel;
+        [SerializeField] private Image border;
+        [SerializeField] private Image background;
+        [SerializeField] private Image check;
+        [SerializeField] private TextMeshProUGUI onLabel;
+        [SerializeField] private TextMeshProUGUI offLabel;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 if (UIManagerAsset == null)
@@ -51,9 +47,6 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateToggle()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 border.color = UIManagerAsset.toggleBorderColor;

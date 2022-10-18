@@ -9,20 +9,19 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerHSelector : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
+        public bool overrideOptions = false;
+        public bool overrideColors = false;
+        public bool overrideFonts = false;
 
         [Header("Resources")]
-        public List<GameObject> images = new List<GameObject>();
-        public List<GameObject> imagesHighlighted = new List<GameObject>();
-        public List<GameObject> texts = new List<GameObject>();
+        [SerializeField] private List<GameObject> images = new List<GameObject>();
+        [SerializeField] private List<GameObject> imagesHighlighted = new List<GameObject>();
+        [SerializeField] private List<GameObject> texts = new List<GameObject>();
         HorizontalSelector hSelector;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 if (hSelector == null)
@@ -54,27 +53,36 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateSelector()
         {
-            for (int i = 0; i < images.Count; ++i)
+            if (overrideColors == false)
             {
-                Image currentImage = images[i].GetComponent<Image>();
-                currentImage.color = new Color(UIManagerAsset.selectorColor.r, UIManagerAsset.selectorColor.g, UIManagerAsset.selectorColor.b, currentImage.color.a);
-            }
+                for (int i = 0; i < images.Count; ++i)
+                {
+                    Image currentImage = images[i].GetComponent<Image>();
+                    currentImage.color = new Color(UIManagerAsset.selectorColor.r, UIManagerAsset.selectorColor.g, UIManagerAsset.selectorColor.b, currentImage.color.a);
+                }
 
-            for (int i = 0; i < imagesHighlighted.Count; ++i)
-            {
-                Image currentAlphaImage = imagesHighlighted[i].GetComponent<Image>();
-                currentAlphaImage.color = new Color(UIManagerAsset.selectorHighlightedColor.r, UIManagerAsset.selectorHighlightedColor.g, UIManagerAsset.selectorHighlightedColor.b, currentAlphaImage.color.a);
+                for (int i = 0; i < imagesHighlighted.Count; ++i)
+                {
+                    Image currentAlphaImage = imagesHighlighted[i].GetComponent<Image>();
+                    currentAlphaImage.color = new Color(UIManagerAsset.selectorHighlightedColor.r, UIManagerAsset.selectorHighlightedColor.g, UIManagerAsset.selectorHighlightedColor.b, currentAlphaImage.color.a);
+                }
             }
 
             for (int i = 0; i < texts.Count; ++i)
             {
                 TextMeshProUGUI currentText = texts[i].GetComponent<TextMeshProUGUI>();
-                currentText.color = new Color(UIManagerAsset.selectorColor.r, UIManagerAsset.selectorColor.g, UIManagerAsset.selectorColor.b, currentText.color.a);
-                currentText.font = UIManagerAsset.selectorFont;
-                currentText.fontSize = UIManagerAsset.hSelectorFontSize;
+
+                if (overrideColors == false)
+                    currentText.color = new Color(UIManagerAsset.selectorColor.r, UIManagerAsset.selectorColor.g, UIManagerAsset.selectorColor.b, currentText.color.a);
+
+                if (overrideFonts == false)
+                {
+                    currentText.font = UIManagerAsset.selectorFont;
+                    currentText.fontSize = UIManagerAsset.hSelectorFontSize;
+                }
             }
 
-            if (hSelector != null)
+            if (hSelector != null && overrideOptions == false)
             {
                 hSelector.invertAnimation = UIManagerAsset.hSelectorInvertAnimation;
                 hSelector.loopSelection = UIManagerAsset.hSelectorLoopSelection;

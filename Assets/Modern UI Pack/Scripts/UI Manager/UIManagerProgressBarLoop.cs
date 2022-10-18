@@ -7,10 +7,10 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerProgressBarLoop : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
+        [SerializeField] private UIManager UIManagerAsset;
         public bool hasBackground;
         public bool useRegularBackground;
-        public bool webglMode = false;
+        public bool overrideColors = false;
 
         [Header("Resources")]
         public Image bar;
@@ -18,13 +18,9 @@ namespace Michsky.UI.ModernUIPack
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
-                if (UIManagerAsset == null)
-                    UIManagerAsset = Resources.Load<UIManager>("MUIP Manager");
+                if (UIManagerAsset == null) { UIManagerAsset = Resources.Load<UIManager>("MUIP Manager"); }
 
                 this.enabled = true;
 
@@ -49,23 +45,21 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateProgressBar()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
-            try
+            if (overrideColors == false)
             {
-                bar.color = UIManagerAsset.progressBarColor;
-
-                if (hasBackground == true)
+                try
                 {
-                    if (useRegularBackground == true)
-                        background.color = UIManagerAsset.progressBarBackgroundColor;
-                    else
-                        background.color = UIManagerAsset.progressBarLoopBackgroundColor;
-                }
-            }
+                    bar.color = UIManagerAsset.progressBarColor;
 
-            catch { }
+                    if (hasBackground == true)
+                    {
+                        if (useRegularBackground == true) { background.color = UIManagerAsset.progressBarBackgroundColor; }
+                        else { background.color = UIManagerAsset.progressBarLoopBackgroundColor; }
+                    }
+                }
+
+                catch { }
+            }
         }
     }
 }

@@ -8,18 +8,14 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerTooltip : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
 
         [Header("Resources")]
-        public Image background;
-        public TextMeshProUGUI text;
+        [SerializeField] private Image background;
+        [SerializeField] private TextMeshProUGUI text;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 if (UIManagerAsset == null)
@@ -48,9 +44,6 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateTooltip()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 background.color = UIManagerAsset.tooltipBackgroundColor;

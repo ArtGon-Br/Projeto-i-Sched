@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 
 namespace Michsky.UI.ModernUIPack
 {
+    [ExecuteInEditMode]
     [RequireComponent(typeof(Button))]
     public class ButtonManagerBasic : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
@@ -33,7 +34,7 @@ namespace Michsky.UI.ModernUIPack
         public bool useRipple = true;
 
         // Ripple
-        public RippleUpdateMode rippleUpdateMode = RippleUpdateMode.UNSCALED_TIME;
+        public RippleUpdateMode rippleUpdateMode = RippleUpdateMode.UnscaledTime;
         public Sprite rippleShape;
         [Range(0.1f, 5)] public float speed = 1f;
         [Range(0.5f, 25)] public float maxSize = 4f;
@@ -43,34 +44,33 @@ namespace Michsky.UI.ModernUIPack
         public bool centered = false;
         bool isPointerOn;
 
-        public enum RippleUpdateMode
+        public bool isPreset;
+
+        public enum RippleUpdateMode { Normal, UnscaledTime }
+
+        void Awake()
         {
-            NORMAL,
-            UNSCALED_TIME
-        }
+#if UNITY_EDITOR
+            if (Application.isPlaying == false)
+            {
+                if (useCustomContent == false) { UpdateUI(); }
+                return;
+            }
+#endif
 
-        void Start()
-        {
-            if (buttonVar == null)
-                buttonVar = gameObject.GetComponent<Button>();
+            if (buttonVar == null) { buttonVar = gameObject.GetComponent<Button>(); }
+            if (enableButtonSounds == true && useClickSound == true) { buttonVar.onClick.AddListener(() => soundSource.PlayOneShot(clickSound)); }
+            if (useCustomContent == false) { UpdateUI(); }
 
-            buttonVar.onClick.AddListener(delegate { clickEvent.Invoke(); });
+            buttonVar.onClick.AddListener(() => clickEvent.Invoke());
 
-            if (enableButtonSounds == true && useClickSound == true)
-                buttonVar.onClick.AddListener(delegate { soundSource.PlayOneShot(clickSound); });
-
-            if (useCustomContent == false)
-                UpdateUI();
-
-            if (useRipple == true && rippleParent != null)
-                rippleParent.SetActive(false);
-            else if (useRipple == false && rippleParent != null)
-                Destroy(rippleParent);
+            if (useRipple == true && rippleParent != null) { rippleParent.SetActive(false); }
+            else if (useRipple == false && rippleParent != null) { Destroy(rippleParent); }
         }
 
         public void UpdateUI()
         {
-            normalText.text = buttonText;
+            if (normalText != null) { normalText.text = buttonText; }
         }
 
         public void CreateRipple(Vector2 pos)
@@ -84,15 +84,11 @@ namespace Michsky.UI.ModernUIPack
                 rippleParent.SetActive(true);
                 rippleObj.transform.SetParent(rippleParent.transform);
 
-                if (renderOnTop == true)
-                    rippleParent.transform.SetAsLastSibling();
-                else
-                    rippleParent.transform.SetAsFirstSibling();
+                if (renderOnTop == true) { rippleParent.transform.SetAsLastSibling(); }
+                else { rippleParent.transform.SetAsFirstSibling(); }
 
-                if (centered == true)
-                    rippleObj.transform.localPosition = new Vector2(0f, 0f);
-                else
-                    rippleObj.transform.position = pos;
+                if (centered == true) { rippleObj.transform.localPosition = new Vector2(0f, 0f); }
+                else { rippleObj.transform.position = pos; }
 
                 rippleObj.AddComponent<Ripple>();
                 Ripple tempRipple = rippleObj.GetComponent<Ripple>();
@@ -101,10 +97,8 @@ namespace Michsky.UI.ModernUIPack
                 tempRipple.startColor = startColor;
                 tempRipple.transitionColor = transitionColor;
 
-                if (rippleUpdateMode == RippleUpdateMode.NORMAL)
-                    tempRipple.unscaledTime = false;
-                else
-                    tempRipple.unscaledTime = true;
+                if (rippleUpdateMode == RippleUpdateMode.Normal) { tempRipple.unscaledTime = false; }
+                else { tempRipple.unscaledTime = true; }
             }
         }
 
@@ -113,13 +107,9 @@ namespace Michsky.UI.ModernUIPack
             if (useRipple == true && isPointerOn == true)
 #if ENABLE_LEGACY_INPUT_MANAGER
                 CreateRipple(Input.mousePosition);
-#elif ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
-                CreateRipple(Input.mousePosition);
 #elif ENABLE_INPUT_SYSTEM
                 CreateRipple(Mouse.current.position.ReadValue());
 #endif
-            else if (useRipple == false)
-                this.enabled = false;
         }
 
         public void OnPointerEnter(PointerEventData eventData)

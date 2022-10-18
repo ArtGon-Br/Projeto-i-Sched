@@ -7,17 +7,13 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerContextMenu : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
 
         [Header("Resources")]
-        public Image backgroundImage;
+        [SerializeField] private Image backgroundImage;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 if (UIManagerAsset == null)

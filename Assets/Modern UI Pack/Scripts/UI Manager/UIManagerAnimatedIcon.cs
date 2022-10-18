@@ -9,7 +9,6 @@ namespace Michsky.UI.ModernUIPack
     {
         [Header("Settings")]
         public UIManager UIManagerAsset;
-        public bool webglMode = false;
 
         [Header("Resources")]
         public List<GameObject> images = new List<GameObject>();
@@ -17,9 +16,6 @@ namespace Michsky.UI.ModernUIPack
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 if (UIManagerAsset == null)

@@ -16,6 +16,7 @@ namespace Michsky.UI.ModernUIPack
         {
             transform.localScale = new Vector3(0f, 0f, 0f);
             colorImg = GetComponent<Image>();
+            colorImg.raycastTarget = false;
             colorImg.color = new Color(startColor.r, startColor.g, startColor.b, startColor.a);
         }
 
@@ -28,9 +29,7 @@ namespace Michsky.UI.ModernUIPack
 
                 if (transform.localScale.x >= maxSize * 0.998)
                 {
-                    if (transform.parent.childCount == 1)
-                        transform.parent.gameObject.SetActive(false);
-
+                    if (transform.parent.childCount == 1) { transform.parent.gameObject.SetActive(false); }
                     Destroy(gameObject);
                 }
             }
@@ -42,9 +41,7 @@ namespace Michsky.UI.ModernUIPack
 
                 if (transform.localScale.x >= maxSize * 0.998)
                 {
-                    if (transform.parent.childCount == 1)
-                        transform.parent.gameObject.SetActive(false);
-
+                    if (transform.parent.childCount == 1) { transform.parent.gameObject.SetActive(false); }
                     Destroy(gameObject);
                 }
             }

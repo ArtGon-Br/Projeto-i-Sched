@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using TMPro;
 
 namespace Michsky.UI.ModernUIPack
@@ -16,6 +17,10 @@ namespace Michsky.UI.ModernUIPack
         public GameObject tooltipRect;
         public TextMeshProUGUI descriptionText;
 
+        [Header("Settings")]
+        public bool forceToUpdate = false;
+        public bool useIn3D = false;
+
         TooltipManager tpManager;
         [HideInInspector] public Animator tooltipAnimator;
 
@@ -29,7 +34,7 @@ namespace Michsky.UI.ModernUIPack
                     descriptionText = tooltipRect.transform.GetComponentInChildren<TextMeshProUGUI>();
                 }
 
-                catch { Debug.LogError("No Tooltip Rect assigned.", this); }
+                catch { Debug.LogError("<b>[Tooltip Content]</b> Tooltip Rect is missing.", this); return; }
             }
 
             if (tooltipRect != null)
@@ -37,25 +42,32 @@ namespace Michsky.UI.ModernUIPack
                 tpManager = tooltipRect.GetComponentInParent<TooltipManager>();
                 tooltipAnimator = tooltipRect.GetComponentInParent<Animator>();
             }
+
+            if (tpManager.contentLE == null)
+                tpManager.contentLE = descriptionText.GetComponent<LayoutElement>();
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        private void ProcessEnter()
         {
             if (tooltipRect == null)
                 return;
 
             descriptionText.text = description;
             tpManager.allowUpdating = true;
+            CheckForContentWidth();
+
+            StopCoroutine("DisableAnimator");
             tooltipAnimator.gameObject.SetActive(false);
             tooltipAnimator.gameObject.SetActive(true);
 
-            if (delay == 0)
-                tooltipAnimator.Play("In");
-            else
-                StartCoroutine("ShowTooltip");
+            if (delay == 0) { tooltipAnimator.Play("In"); }
+            else { StartCoroutine("ShowTooltip"); }
+
+            if (forceToUpdate == true)
+                StartCoroutine("UpdateLayoutPosition");
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        private void ProcessExit()
         {
             if (tooltipRect == null)
                 return;
@@ -65,13 +77,43 @@ namespace Michsky.UI.ModernUIPack
                 StopCoroutine("ShowTooltip");
 
                 if (tooltipAnimator.GetCurrentAnimatorStateInfo(0).IsName("In"))
-                     tooltipAnimator.Play("Out");
+                    tooltipAnimator.Play("Out");
             }
 
-            else
-                tooltipAnimator.Play("Out");
+            else { tooltipAnimator.Play("Out"); }
 
             tpManager.allowUpdating = false;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData) { ProcessEnter(); }
+        public void OnPointerExit(PointerEventData eventData) { ProcessExit(); }
+        public void OnMouseEnter() { if (useIn3D == true) { ProcessEnter(); } }
+        public void OnMouseExit() { if (useIn3D == true) { ProcessExit(); } }
+
+        public void CheckForContentWidth() { LayoutElementCreator(); StartCoroutine("CalculateContentWidth"); }
+
+        private void LayoutElementCreator()
+        {
+            if (tpManager.contentLE == null)
+            {
+                descriptionText.gameObject.AddComponent<LayoutElement>();
+                tpManager.contentLE = descriptionText.GetComponent<LayoutElement>();
+            }
+
+            tpManager.contentLE.preferredWidth = tpManager.preferredWidth;
+            tpManager.contentLE.enabled = false;
+        }
+
+        IEnumerator CalculateContentWidth()
+        {
+            yield return new WaitForSecondsRealtime(0.05f);
+            float tempWidth = descriptionText.GetComponent<RectTransform>().sizeDelta.x;
+     
+            if (tempWidth >= tpManager.preferredWidth + 1)
+                tpManager.contentLE.enabled = true;
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tpManager.contentLE.gameObject.GetComponent<RectTransform>());
+            tpManager.contentLE.preferredWidth = tpManager.preferredWidth;
         }
 
         IEnumerator ShowTooltip()
@@ -79,6 +121,12 @@ namespace Michsky.UI.ModernUIPack
             yield return new WaitForSeconds(delay);
             tooltipAnimator.Play("In");
             StopCoroutine("ShowTooltip");
+        }
+
+        IEnumerator UpdateLayoutPosition()
+        {
+            yield return new WaitForSecondsRealtime(0.05f);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipAnimator.gameObject.GetComponent<RectTransform>());
         }
     }
 }

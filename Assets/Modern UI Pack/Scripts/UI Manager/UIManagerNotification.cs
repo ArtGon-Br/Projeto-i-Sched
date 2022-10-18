@@ -8,24 +8,21 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerNotification : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
+        public bool overrideColors = false;
+        public bool overrideFonts = false;
 
         [Header("Resources")]
-        public Image background;
-        public Image icon;
-        public TextMeshProUGUI title;
-        public TextMeshProUGUI description;
+        [SerializeField] private Image background;
+        [SerializeField] private Image icon;
+        [SerializeField] private TextMeshProUGUI title;
+        [SerializeField] private TextMeshProUGUI description;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
-                if (UIManagerAsset == null)
-                    UIManagerAsset = Resources.Load<UIManager>("MUIP Manager");
+                if (UIManagerAsset == null) { UIManagerAsset = Resources.Load<UIManager>("MUIP Manager"); }
 
                 this.enabled = true;
 
@@ -50,19 +47,23 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateNotification()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
-                background.color = UIManagerAsset.notificationBackgroundColor;
-                icon.color = UIManagerAsset.notificationIconColor;
-                title.color = UIManagerAsset.notificationTitleColor;
-                description.color = UIManagerAsset.notificationDescriptionColor;
-                title.font = UIManagerAsset.notificationTitleFont;
-                title.fontSize = UIManagerAsset.notificationTitleFontSize;
-                description.font = UIManagerAsset.notificationDescriptionFont;
-                description.fontSize = UIManagerAsset.notificationDescriptionFontSize;
+                if (overrideColors == false)
+                {
+                    background.color = UIManagerAsset.notificationBackgroundColor;
+                    icon.color = UIManagerAsset.notificationIconColor;
+                    title.color = UIManagerAsset.notificationTitleColor;
+                    description.color = UIManagerAsset.notificationDescriptionColor;
+                }
+
+                if (overrideFonts == false)
+                {
+                    title.font = UIManagerAsset.notificationTitleFont;
+                    title.fontSize = UIManagerAsset.notificationTitleFontSize;
+                    description.font = UIManagerAsset.notificationDescriptionFont;
+                    description.fontSize = UIManagerAsset.notificationDescriptionFontSize;
+                }
             }
 
             catch { }

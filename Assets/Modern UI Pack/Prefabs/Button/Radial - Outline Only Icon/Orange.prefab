@@ -68,14 +68,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224568382663977146}
-  - component: {fileID: 222109955860470258}
   - component: {fileID: 114943585013376470}
   - component: {fileID: 114195935313061664}
   - component: {fileID: 95076758057059616}
   m_Layer: 5
   m_Name: Orange
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 98d001ce6b3b53242911dcc3d1415f59, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -101,14 +100,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 55, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &222109955860470258
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226253634708956}
-  m_CullTransparentMesh: 0
 --- !u!114 &114943585013376470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,6 +141,7 @@ MonoBehaviour:
   transitionColor: {r: 1, g: 1, b: 1, a: 0}
   renderOnTop: 1
   centered: 0
+  isPreset: 1
 --- !u!114 &114195935313061664
 MonoBehaviour:
   m_ObjectHideFlags: 0

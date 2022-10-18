@@ -11,12 +11,14 @@ namespace Michsky.UI.ModernUIPack
     {
         void Awake()
         {
-#if ENABLE_INPUT_SYSTEM
-            StandaloneInputModule tempModule = gameObject.GetComponent<StandaloneInputModule>();
-            Destroy(tempModule);
-            InputSystemUIInputModule newModule = gameObject.AddComponent<InputSystemUIInputModule>();
-            newModule.enabled = false;
-            newModule.enabled = true;
+#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+            InputSystemUIInputModule tempModule = gameObject.GetComponent<InputSystemUIInputModule>();
+
+            if (tempModule == null)
+            {
+                Debug.LogError("<b>[Modern UI Pack]</b> Input System is enabled, but <b>'Input System UI Input Module'</b> is missing. " +
+                    "Select the event system object, and click the <b>'Replace'</b> button.");
+            }
 #endif
         }
     }

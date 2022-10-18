@@ -36,7 +36,7 @@ namespace Michsky.UI.ModernUIPack
             public string itemText = "Item Text";
             public Sprite itemIcon;
             public ContextItemType contextItemType;
-            public UnityEvent onClickEvents;
+            public UnityEvent onClick;
         }
 
         public enum ContextItemType
@@ -55,7 +55,7 @@ namespace Michsky.UI.ModernUIPack
                     itemParent = contextManager.transform.Find("Content/Item List").transform;
                 }
 
-                catch { Debug.Log("<b>[Context Menu]</b> No variable attached to Context Manager.", this); return; }
+                catch { Debug.Log("<b>[Context Menu]</b> Context Manager is missing.", this); return; }
             }
 
             contextAnimator = contextManager.contextAnimator;
@@ -95,13 +95,13 @@ namespace Michsky.UI.ModernUIPack
             if (timer <= holdToOpen)
                 return;
 
-            if (contextManager.isContextMenuOn == true)
+            if (contextManager.isOn == true)
             {
                 contextAnimator.Play("Menu Out");
-                contextManager.isContextMenuOn = false;
+                contextManager.isOn = false;
             }
 
-            else if (contextManager.isContextMenuOn == false)
+            else if (contextManager.isOn == false)
             {
                 foreach (Transform child in itemParent)
                     Destroy(child.gameObject);
@@ -124,16 +124,19 @@ namespace Michsky.UI.ModernUIPack
                     imageHelper = contexItems[i].itemIcon;
                     setItemImage.sprite = imageHelper;
 
+                    if (imageHelper == null)
+                        setItemImage.color = new Color(0, 0, 0, 0);
+
                     Button itemButton;
                     itemButton = go.GetComponent<Button>();
-                    itemButton.onClick.AddListener(contexItems[i].onClickEvents.Invoke);
+                    itemButton.onClick.AddListener(contexItems[i].onClick.Invoke);
                     itemButton.onClick.AddListener(CloseOnClick);
                     StartCoroutine(ExecuteAfterTime(0.01f));
                 }
 
                 contextManager.SetContextMenuPosition();
                 contextAnimator.Play("Menu In");
-                contextManager.isContextMenuOn = true;
+                contextManager.isOn = true;
                 contextManager.SetContextMenuPosition();
             }
         }
@@ -150,7 +153,7 @@ namespace Michsky.UI.ModernUIPack
         public void CloseOnClick()
         {
             contextAnimator.Play("Menu Out");
-            contextManager.isContextMenuOn = false;
+            contextManager.isOn = false;
         }
     }
 }

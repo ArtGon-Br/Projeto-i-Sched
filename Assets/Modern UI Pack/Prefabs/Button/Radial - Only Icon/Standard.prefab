@@ -17,7 +17,7 @@ GameObject:
   m_Layer: 5
   m_Name: Standard
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 98d001ce6b3b53242911dcc3d1415f59, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -88,6 +88,7 @@ MonoBehaviour:
   transitionColor: {r: 0, g: 0, b: 0, a: 0}
   renderOnTop: 0
   centered: 0
+  isPreset: 0
 --- !u!114 &114937948670954818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,6 +175,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
   buttonType: 6
+  webglMode: 0
+  overrideColors: 0
+  overrideFonts: 0
   basicFilled: {fileID: 0}
   basicText: {fileID: 0}
   basicOnlyIconFilled: {fileID: 0}

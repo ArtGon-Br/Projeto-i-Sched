@@ -8,21 +8,17 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerModalWindow : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
 
         [Header("Resources")]
-        public Image background;
-        public Image contentBackground;
-        public Image icon;
-        public TextMeshProUGUI title;
-        public TextMeshProUGUI description;
+        [SerializeField] private Image background;
+        [SerializeField] private Image contentBackground;
+        [SerializeField] private Image icon;
+        [SerializeField] private TextMeshProUGUI title;
+        [SerializeField] private TextMeshProUGUI description;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 if (UIManagerAsset == null)
@@ -51,9 +47,6 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateModalWindow()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
                 background.color = UIManagerAsset.modalWindowBackgroundColor;

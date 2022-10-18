@@ -8,35 +8,27 @@ namespace Michsky.UI.ModernUIPack
     public class UIManagerDropdown : MonoBehaviour
     {
         [Header("Settings")]
-        public UIManager UIManagerAsset;
-        public bool webglMode = false;
+        [SerializeField] private UIManager UIManagerAsset;
+        public bool overrideColors = false;
+        public bool overrideFonts = false;
 
         [Header("Resources")]
-        public Image background;
-        public Image contentBackground;
-        public Image mainIcon;
-        public TextMeshProUGUI mainText;
-        public Image expandIcon;
-        public Image itemBackground;
-        public Image itemIcon;
-        public TextMeshProUGUI itemText;
+        [SerializeField] private Image background;
+        [SerializeField] private Image contentBackground;
+        [SerializeField] private Image mainIcon;
+        [SerializeField] private TextMeshProUGUI mainText;
+        [SerializeField] private Image expandIcon;
         CustomDropdown dropdownMain;
         DropdownMultiSelect dropdownMulti;
 
         void Awake()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-   
             try
             {
-                if (dropdownMain != null)
-                    dropdownMain = gameObject.GetComponent<CustomDropdown>();
-                else
-                    dropdownMulti = gameObject.GetComponent<DropdownMultiSelect>();
+                dropdownMain = gameObject.GetComponent<CustomDropdown>();
 
-                if (UIManagerAsset == null)
-                    UIManagerAsset = Resources.Load<UIManager>("MUIP Manager");
+                if (dropdownMain == null) { dropdownMulti = gameObject.GetComponent<DropdownMultiSelect>(); }
+                if (UIManagerAsset == null) { UIManagerAsset = Resources.Load<UIManager>("MUIP Manager"); }
 
                 this.enabled = true;
 
@@ -61,65 +53,42 @@ namespace Michsky.UI.ModernUIPack
 
         void UpdateDropdown()
         {
-            if (Application.isPlaying && webglMode == true)
-                return;
-
             try
             {
-                if (UIManagerAsset.buttonThemeType == UIManager.ButtonThemeType.BASIC)
+                if (UIManagerAsset.buttonThemeType == UIManager.ButtonThemeType.Basic)
                 {
-                    background.color = UIManagerAsset.dropdownColor;
-                    contentBackground.color = UIManagerAsset.dropdownColor;
-                    mainIcon.color = UIManagerAsset.dropdownTextColor;
-                    mainText.color = UIManagerAsset.dropdownTextColor;
-                    expandIcon.color = UIManagerAsset.dropdownTextColor;
-                    itemBackground.color = UIManagerAsset.dropdownItemColor;
-                    itemIcon.color = UIManagerAsset.dropdownTextColor;
-                    itemText.color = UIManagerAsset.dropdownTextColor;
-                    mainText.font = UIManagerAsset.dropdownFont;
-                    mainText.fontSize = UIManagerAsset.dropdownFontSize;
-                    itemText.font = UIManagerAsset.dropdownFont;
-                    itemText.fontSize = UIManagerAsset.dropdownFontSize;
+                    if (overrideColors == false)
+                    {
+                        background.color = UIManagerAsset.dropdownColor;
+                        contentBackground.color = UIManagerAsset.dropdownColor;
+                        mainIcon.color = UIManagerAsset.dropdownTextColor;
+                        mainText.color = UIManagerAsset.dropdownTextColor;
+                        expandIcon.color = UIManagerAsset.dropdownTextColor;
+                    }
+
+                    if (overrideFonts == false)
+                    {
+                        mainText.font = UIManagerAsset.dropdownFont;
+                        mainText.fontSize = UIManagerAsset.dropdownFontSize;
+                    }
                 }
 
-                else if (UIManagerAsset.buttonThemeType == UIManager.ButtonThemeType.CUSTOM)
+                else if (UIManagerAsset.buttonThemeType == UIManager.ButtonThemeType.Custom)
                 {
-                    background.color = UIManagerAsset.dropdownColor;
-                    contentBackground.color = UIManagerAsset.dropdownColor;
-                    mainIcon.color = UIManagerAsset.dropdownIconColor;
-                    mainText.color = UIManagerAsset.dropdownTextColor;
-                    expandIcon.color = UIManagerAsset.dropdownIconColor;
-                    itemBackground.color = UIManagerAsset.dropdownItemColor;
-                    itemIcon.color = UIManagerAsset.dropdownItemIconColor;
-                    itemText.color = UIManagerAsset.dropdownItemTextColor;
-                    mainText.font = UIManagerAsset.dropdownFont;
-                    mainText.fontSize = UIManagerAsset.dropdownFontSize;
-                    itemText.font = UIManagerAsset.dropdownItemFont;
-                    itemText.fontSize = UIManagerAsset.dropdownItemFontSize;
-                }
+                    if (overrideColors == false)
+                    {
+                        background.color = UIManagerAsset.dropdownColor;
+                        contentBackground.color = UIManagerAsset.dropdownColor;
+                        mainIcon.color = UIManagerAsset.dropdownIconColor;
+                        mainText.color = UIManagerAsset.dropdownTextColor;
+                        expandIcon.color = UIManagerAsset.dropdownIconColor;
+                    }
 
-                if (dropdownMain != null)
-                {
-                    if (UIManagerAsset.dropdownAnimationType == UIManager.DropdownAnimationType.FADING)
-                        dropdownMain.animationType = CustomDropdown.AnimationType.FADING;
-
-                    else if (UIManagerAsset.dropdownAnimationType == UIManager.DropdownAnimationType.SLIDING)
-                        dropdownMain.animationType = CustomDropdown.AnimationType.SLIDING;
-
-                    else if (UIManagerAsset.dropdownAnimationType == UIManager.DropdownAnimationType.STYLISH)
-                        dropdownMain.animationType = CustomDropdown.AnimationType.STYLISH;
-                }
-
-                else if (dropdownMulti != null)
-                {
-                    if (UIManagerAsset.dropdownAnimationType == UIManager.DropdownAnimationType.FADING)
-                        dropdownMulti.animationType = DropdownMultiSelect.AnimationType.FADING;
-
-                    else if (UIManagerAsset.dropdownAnimationType == UIManager.DropdownAnimationType.SLIDING)
-                        dropdownMulti.animationType = DropdownMultiSelect.AnimationType.SLIDING;
-
-                    else if (UIManagerAsset.dropdownAnimationType == UIManager.DropdownAnimationType.STYLISH)
-                        dropdownMulti.animationType = DropdownMultiSelect.AnimationType.STYLISH;
+                    if (overrideFonts == false)
+                    {
+                        mainText.font = UIManagerAsset.dropdownFont;
+                        mainText.fontSize = UIManagerAsset.dropdownFontSize;
+                    }
                 }
             }
 

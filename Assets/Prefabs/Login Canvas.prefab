@@ -46,6 +46,7 @@ MonoBehaviour:
   messageBox: {fileID: 5613171180362625957}
   loginButton: {fileID: 2016765752356215016}
   loadingCircle: {fileID: 180074470361893354}
+  dashboardScene: Main
   OnSuccesfullyLogged:
     m_PersistentCalls:
       m_Calls: []
@@ -113,7 +114,7 @@ MonoBehaviour:
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
   hasBackground: 0
   useRegularBackground: 0
-  webglMode: 0
+  overrideColors: 0
   bar: {fileID: 7505525049447916422}
   background: {fileID: 0}
 --- !u!95 &2914163884381200897
@@ -1589,6 +1590,7 @@ MonoBehaviour:
   transitionColor: {r: 0, g: 0, b: 0, a: 0}
   renderOnTop: 1
   centered: 0
+  isPreset: 0
 --- !u!114 &2016765752356215021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1968,6 +1970,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputText: {fileID: 0}
   inputFieldAnimator: {fileID: 0}
+  processSubmit: 0
+  onSubmit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2016765752487831904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1981,7 +1987,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
-  webglMode: 0
+  overrideColors: 0
+  overrideFonts: 0
   images:
   - {fileID: 2016765752051705373}
   - {fileID: 2016765752984082306}
@@ -3313,6 +3320,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputText: {fileID: 0}
   inputFieldAnimator: {fileID: 0}
+  processSubmit: 0
+  onSubmit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2016765753460811785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3326,7 +3337,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
-  webglMode: 0
+  overrideColors: 0
+  overrideFonts: 0
   images:
   - {fileID: 2016765753089414204}
   - {fileID: 2016765752165865361}
@@ -3566,6 +3578,7 @@ MonoBehaviour:
   transitionColor: {r: 0, g: 0, b: 0, a: 0}
   renderOnTop: 0
   centered: 0
+  isPreset: 0
 --- !u!114 &2955258468364490563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3828,6 +3841,7 @@ MonoBehaviour:
   transitionColor: {r: 1, g: 1, b: 1, a: 0}
   renderOnTop: 0
   centered: 0
+  isPreset: 0
 --- !u!114 &761909325496271805
 MonoBehaviour:
   m_ObjectHideFlags: 0

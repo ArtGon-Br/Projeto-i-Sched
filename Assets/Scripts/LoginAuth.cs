@@ -10,8 +10,10 @@ public class LoginAuth : MonoBehaviour
     [SerializeField] TMP_Text messageBox;
     [SerializeField] GameObject loginButton;
     [SerializeField] GameObject loadingCircle;
+    [SerializeField] string dashboardScene = "Main";
     [Space]
     [SerializeField] UnityEvent OnSuccesfullyLogged;
+
 
     public TMP_InputField emailInputfield, passwordInputfield;
 
@@ -102,5 +104,6 @@ public class LoginAuth : MonoBehaviour
     void GoToMainPage()
     {
         OnSuccesfullyLogged.Invoke();
+        SceneController.Instance.LoadScene(dashboardScene);
     }
 }

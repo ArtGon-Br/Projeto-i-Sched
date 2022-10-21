@@ -14,13 +14,19 @@ public class LoginAuth : MonoBehaviour
     [Space]
     [SerializeField] UnityEvent OnSuccesfullyLogged;
 
-
     public TMP_InputField emailInputfield, passwordInputfield;
+
+    public FirebaseAuthenticator _fireAuth;
 
     private void Awake()
     {
         messageBox.enabled = false;
         loadingCircle.SetActive(false);
+    }
+
+    void Start()
+    {
+        _fireAuth = FindObjectOfType<FirebaseAuthenticator>();
     }
 
     void LogMessage(string message)
@@ -95,10 +101,13 @@ public class LoginAuth : MonoBehaviour
         }
 
         Debug.LogFormat("User Signed in successfully: {0} {1}", FirebaseAuthenticator.instance.User.DisplayName, FirebaseAuthenticator.instance.User.Email);
-
+        
         // Printa mensagem de sucesso e chama função para logar
         LogMessage("Logado com sucesso!");
         Invoke("GoToMainPage", 1f);
+
+        // Define o usuario atual
+        _fireAuth.DefineUser(FirebaseAuthenticator.instance.User.Email);
     }
 
     void GoToMainPage()

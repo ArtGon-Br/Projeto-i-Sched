@@ -8,6 +8,15 @@ public class FirestoreManager : MonoBehaviour
     private FirebaseFirestore firestore;            // firestore é usado como variável apra todas as operações, tanto escrita como leitura
     private ListenerRegistration listenerReg;       // variável apra registrar eventos no banco de dados
 
+    public FirebaseAuthenticator _fireAuth;
+
+    private void Awake()
+    {
+        _fireAuth = FindObjectOfType<FirebaseAuthenticator>();
+
+        userPath = "users_sheet/" + _fireAuth.currentUser;
+    }
+
     private void Start()
     {
         firestore = FirebaseFirestore.DefaultInstance;

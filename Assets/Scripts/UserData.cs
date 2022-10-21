@@ -11,4 +11,7 @@ public struct UserData
 
     [FirestoreProperty]
     public string Password { get; set; }
+
+    [FirestoreProperty]
+    public int Id { get; set; }
 }

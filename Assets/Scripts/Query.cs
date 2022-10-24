@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Firebase;
 using Firebase.Firestore;
 using Firebase.Extensions;
@@ -9,7 +8,7 @@ using TMPro;
 
 public class Query : MonoBehaviour
 {
-    [SerializeField] Text input;
+    [SerializeField] TMP_InputField input;
     [SerializeField] Transform viewport;
     [SerializeField] Transform task;
     FirebaseFirestore db;

@@ -15,6 +15,7 @@ public class FirebaseAuthenticator : MonoBehaviour
             instance = this;
         }else{
             Destroy(gameObject);
+            return;
         }
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
             dependecyStatus = task.Result;

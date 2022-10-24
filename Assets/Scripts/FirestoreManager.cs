@@ -8,7 +8,7 @@ public class FirestoreManager : MonoBehaviour
     private FirebaseFirestore firestore;            // firestore é usado como variável apra todas as operações, tanto escrita como leitura
     private ListenerRegistration listenerReg;       // variável apra registrar eventos no banco de dados
 
-    private void Start()
+    public void RestoreData()
     {
         firestore = FirebaseFirestore.DefaultInstance;
 
@@ -24,8 +24,11 @@ public class FirestoreManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Interrompe o recebimento de informação após o objeto ser removidoda cena
-        listenerReg.Stop();
+        if (listenerReg != null)
+        {
+            // Interrompe o recebimento de informação após o objeto ser removidoda cena
+            listenerReg.Stop();
+        }
     }
 
     public void CreateUser(string userName, string password)

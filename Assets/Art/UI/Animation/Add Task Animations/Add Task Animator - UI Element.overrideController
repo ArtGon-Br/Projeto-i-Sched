@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Add Task Animator - UI Element
+  m_Controller: {fileID: 9100000, guid: 381b8171f6effdc41962b96049912ff2, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 3bccc901628ff474c952202e412ed917, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0ada97b0edc6ddd48b7612da1cb5df56, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: af1c5c0be55c8994286dbbc430b9bf5f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d5c5951780d43834fa6305c190e8f3d8, type: 2}

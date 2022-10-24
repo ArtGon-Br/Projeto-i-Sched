@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Semana.unity
     guid: 8eb026db7d8303d479318c42fb301669
+  - enabled: 1
+    path: Assets/Scenes/FilterTasks.unity
+    guid: 73198f88a97a5aa4597d1d9602f43ea2
   m_configObjects: {}

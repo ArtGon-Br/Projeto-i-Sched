@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hour: 10
   minute: 30
-  taskName: Estudar Eng de Software
-  taskDescription: Estudar para a atividade de Engenharia de Software
+  taskName: Desenvolver iSched - Eng Software
+  taskDescription: Desenvolver projeto da disciplina de Engenharia de Software

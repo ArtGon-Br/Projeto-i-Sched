@@ -17,11 +17,6 @@ public class PersistentObjectSpawner : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        
-    }
-
     void SpawnObjects()
     {
         foreach(var obj in persistentObjects)

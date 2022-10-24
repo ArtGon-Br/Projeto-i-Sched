@@ -10,9 +10,6 @@ public class FirebaseAuthenticator : MonoBehaviour
     public DependencyStatus dependecyStatus;
     public FirebaseAuth auth;
     public FirebaseUser User;
-
-    public string currentUser;
-    
     private void Awake() {
         if(instance==null){
             instance = this;
@@ -29,17 +26,8 @@ public class FirebaseAuthenticator : MonoBehaviour
         });
     }
 
-    void Start()
-    {
-
-    }
-
     void InitializeFirebase(){
         auth = FirebaseAuth.DefaultInstance;
-    }
-
-    public void DefineUser(string str)
-    {
-        currentUser = str;
+        
     }
 }

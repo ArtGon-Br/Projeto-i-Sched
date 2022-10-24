@@ -1,22 +1,19 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using UnityEngine;
-using UnityEngine.UI;
-using Firebase.Firestore;
+using UnityEngine.EventSystems;
+using System;
 
-public class DayMannager : MonoBehaviour, IPointerClickHandler
+public class DailyTasks : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] int year;
-    [SerializeField][Range(1, 31)] int day;
-    [SerializeField][Range(1, 12)] int month;
+    [SerializeField] [Range(1, 31)] int day;
+    [SerializeField] [Range(1, 12)] int month;
 
     List<Task> tasks;
 
     void Awake()
     {
-
+        
     }
 
     void Start()
@@ -43,8 +40,6 @@ public class DayMannager : MonoBehaviour, IPointerClickHandler
     void SetUI()
     {
         // Filho do botao do dia possui uma imagem se mostra se existe tasks ou nao
-        var color = Color.white;
-        color.a = 0.25f;
-        transform.GetChild(1).GetComponent<Image>().color = color;
+        transform.GetChild(1).gameObject.SetActive(true);
     }
 }

@@ -396,6 +396,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputText: {fileID: 0}
   inputFieldAnimator: {fileID: 0}
+  processSubmit: 0
+  onSubmit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &947440006385605313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,7 +413,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
-  webglMode: 0
+  overrideColors: 0
+  overrideFonts: 0
   images:
   - {fileID: 947440007749176989}
   - {fileID: 947440007926656342}
@@ -508,8 +513,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -792,6 +797,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputText: {fileID: 0}
   inputFieldAnimator: {fileID: 0}
+  processSubmit: 0
+  onSubmit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &947440006445548617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -805,7 +814,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
-  webglMode: 0
+  overrideColors: 0
+  overrideFonts: 0
   images:
   - {fileID: 947440006355164775}
   - {fileID: 947440007280968729}
@@ -994,6 +1004,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputText: {fileID: 0}
   inputFieldAnimator: {fileID: 0}
+  processSubmit: 0
+  onSubmit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &947440006450185392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1007,7 +1021,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
-  webglMode: 0
+  overrideColors: 0
+  overrideFonts: 0
   images:
   - {fileID: 947440008301326563}
   - {fileID: 947440007666501286}
@@ -1300,8 +1315,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1434,8 +1449,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1694,8 +1709,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1828,8 +1843,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2234,8 +2249,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2589,6 +2604,7 @@ MonoBehaviour:
   transitionColor: {r: 0, g: 0, b: 0, a: 0}
   renderOnTop: 1
   centered: 0
+  isPreset: 0
 --- !u!114 &947440007500109308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2744,8 +2760,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3606,6 +3622,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputText: {fileID: 0}
   inputFieldAnimator: {fileID: 0}
+  processSubmit: 0
+  onSubmit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &947440007777394672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3619,7 +3639,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIManagerAsset: {fileID: 11400000, guid: 2a619a9609984be49b53b928dd94e61b, type: 2}
-  webglMode: 0
+  overrideColors: 0
+  overrideFonts: 0
   images:
   - {fileID: 947440007393314668}
   - {fileID: 947440006657957940}
@@ -3793,8 +3814,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4457,17 +4478,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5d8b75dbde70ad44a03c515314b1002, type: 3}
---- !u!114 &5328410094753641556 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8131814636222991259, guid: e5d8b75dbde70ad44a03c515314b1002, type: 3}
-  m_PrefabInstance: {fileID: 4118632654033764303}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 180647d3b5e161b4d9548728096995ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &5328410094753641559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8131814636222991256, guid: e5d8b75dbde70ad44a03c515314b1002, type: 3}
@@ -4483,7 +4493,7 @@ PrefabInstance:
     - target: {fileID: 5791546458598836416, guid: 7dbede54da251314eaefca6884a0e28d, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 5328410094753641556}
+      objectReference: {fileID: 497699203171139546}
     - target: {fileID: 7051899149920425817, guid: 7dbede54da251314eaefca6884a0e28d, type: 3}
       propertyPath: m_Name
       value: Back button
@@ -4579,3 +4589,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7216617083152285867, guid: 7dbede54da251314eaefca6884a0e28d, type: 3}
   m_PrefabInstance: {fileID: 6504411162232630502}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &497699203171139546 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6677819776157651772, guid: 7dbede54da251314eaefca6884a0e28d, type: 3}
+  m_PrefabInstance: {fileID: 6504411162232630502}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c71b3a0eea48a469a6f0f259e859e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

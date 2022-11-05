@@ -12,6 +12,7 @@ public class Query : MonoBehaviour
     [SerializeField] Transform viewport;
     [SerializeField] Transform task;
     FirebaseFirestore db;
+    Transform[] clones;
 
     // Start is called before the first frame update
     void Start()
@@ -20,36 +21,63 @@ public class Query : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
 
         task.gameObject.SetActive(false);
+
+        GetFirstData();
     }
+
+    private void GetFirstData()
+    {
+        deleteClones();
+
+        CollectionReference trfRef = db.Collection("tarefas");
+        trfRef.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
+        {
+            foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
+            {
+                InstantiateTasks(documentSnapshot); 
+            }
+        });
+    } 
 
     // get fb data
     public void GetData()
+    {
+        string inputText = input.text.ToString();
+
+        deleteClones();
+
+        Debug.Log(string.Format("Querying by {0}...", char.ToUpper(inputText[0]) + inputText.Substring(1)));
+        CollectionReference trfRef = db.Collection("tarefas");
+        Firebase.Firestore.Query query = trfRef.WhereEqualTo("Texto", char.ToUpper(inputText[0]) + inputText.Substring(1));
+        query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
         {
-            //Transform clone = viewport.Find("TaskTemplate(Clone)");
-            Transform[] clones = viewport.GetComponentsInChildren<Transform>();
-            foreach (Transform clone in clones) {
-                if (clone != viewport) {
-                    Destroy(clone.gameObject);
-                }
-            }
-
-            Debug.Log(string.Format("Querying by {0}...", input.text.ToString()));
-            CollectionReference trfRef = db.Collection("tarefas");
-            Firebase.Firestore.Query query = trfRef.WhereEqualTo("Texto", input.text.ToString());
-            query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
+            foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
             {
-                foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
-                {
-                    Debug.Log(string.Format("Document {0} returned by query Texto={1}", documentSnapshot.Id, input.text.ToString()));
-                    Dictionary<string, object> details = documentSnapshot.ToDictionary();
+                InstantiateTasks(documentSnapshot);                
+            }
+        });
+    }
 
-                    Transform taskTransform = Instantiate(task, viewport);
-
-                    taskTransform.Find("Data").GetComponent<TMP_Text>().text = details["Data"].ToString();
-                    taskTransform.Find("Hora").GetComponent<TMP_Text>().text = details["Hora"].ToString();
-                    taskTransform.Find("Texto").GetComponent<TMP_Text>().text = details["Texto"].ToString();
-                    taskTransform.gameObject.SetActive(true);
-                }
-            });
+    private void deleteClones()
+    {
+        clones = viewport.GetComponentsInChildren<Transform>();
+        foreach (Transform clone in clones) {
+            if (clone != viewport) {
+                Destroy(clone.gameObject);
+            }
         }
+    }
+
+    private void InstantiateTasks(DocumentSnapshot documentSnapshot)
+    {
+        Debug.Log(string.Format("Document {0} returned by query Texto={1}", documentSnapshot.Id, input.text.ToString()));
+        Dictionary<string, object> details = documentSnapshot.ToDictionary();
+
+        Transform taskTransform = Instantiate(task, viewport);
+
+        taskTransform.Find("Data").GetComponent<TMP_Text>().text = details["Data"].ToString();
+        taskTransform.Find("Hora").GetComponent<TMP_Text>().text = details["Hora"].ToString();
+        taskTransform.Find("Texto").GetComponent<TMP_Text>().text = details["Texto"].ToString();
+        taskTransform.gameObject.SetActive(true);
+    }
 }

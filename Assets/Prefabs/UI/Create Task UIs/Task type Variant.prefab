@@ -7,6 +7,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 149100043825178585, guid: 9abebeee245bdca4692483b725312e6d, type: 3}
+      propertyPath: m_text
+      value: Tarefa fixa?
+      objectReference: {fileID: 0}
+    - target: {fileID: 3404327085356428389, guid: 9abebeee245bdca4692483b725312e6d, type: 3}
+      propertyPath: m_text
+      value: "N\xC3O"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4609804228492672967, guid: 9abebeee245bdca4692483b725312e6d, type: 3}
+      propertyPath: m_text
+      value: SIM
+      objectReference: {fileID: 0}
     - target: {fileID: 7174163367054844771, guid: 9abebeee245bdca4692483b725312e6d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -117,7 +129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8058641722022114571, guid: 9abebeee245bdca4692483b725312e6d, type: 3}
       propertyPath: m_Name
-      value: Task type
+      value: Task type Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8126516580474502582, guid: 9abebeee245bdca4692483b725312e6d, type: 3}
       propertyPath: m_AnchorMax.y

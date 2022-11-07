@@ -3,7 +3,6 @@ using UnityEngine;
 using Firebase;
 using Firebase.Auth;
 using TMPro;
-using Firebase.Firestore;
 
 
 public class RegisterAuth : MonoBehaviour
@@ -77,17 +76,17 @@ public class RegisterAuth : MonoBehaviour
         switch (errorCode)
         {
             case AuthError.MissingEmail:
-                return "E-mail nï¿½o preenchido";
+                return "E-mail não preenchido";
             case AuthError.MissingPassword:
                 return "Por favor insira a senha";
             case AuthError.WeakPassword:
                 return "Senha fraca";
             case AuthError.InvalidEmail:
-                return "E-mail invï¿½lido";
+                return "E-mail inválido";
             case AuthError.EmailAlreadyInUse:
-                return "Este e-mail jï¿½ estï¿½ cadastrado";
+                return "Este e-mail já está cadastrado";
             default:
-                return "Erro nï¿½o especificado!";
+                return "Erro não especificado!";
         }
     }
 
@@ -104,14 +103,8 @@ public class RegisterAuth : MonoBehaviour
                 HandleProfileCreationErrors(ProfileTask.Exception);
             }else{
                 Debug.Log("User set successfully");
-                LogMessage("Usuï¿½rio criado. confirmaï¿½ï¿½o de e-mail pendente. Por favor, verifique sua caixa de entrada e confirme o e-mail.");
+                LogMessage("Usuário criado. confirmação de e-mail pendente. Por favor, verifique sua caixa de entrada e confirme o e-mail.");
                 SendEmailToUser(FirebaseAuthenticator.instance.User);
-                var _userData = new UserData{
-                    Tasks = 0
-                };
-                var auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-                var Firestore = FirebaseFirestore.DefaultInstance;
-                Firestore.Collection(path:"users_sheet").Document(path:auth.CurrentUser.UserId.ToString()).SetAsync(_userData);
             }
         }
 
@@ -139,7 +132,7 @@ public class RegisterAuth : MonoBehaviour
              Debug.LogWarning(message: $"Failed to register taks with {profileException}");
              FirebaseException firebaseEx = profileException.GetBaseException() as FirebaseException;
              AuthError errorCode = (AuthError)firebaseEx.ErrorCode;
-             LogMessage("Falha ao registrar usuï¿½rio", errorColor);
+             LogMessage("Falha ao registrar usuário", errorColor);
         }
     }
 }

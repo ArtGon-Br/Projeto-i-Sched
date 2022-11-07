@@ -14,7 +14,6 @@ public class DayMannager : MonoBehaviour, IPointerClickHandler
 
     List<Task> tasks;
 
-
     void Awake()
     {
 

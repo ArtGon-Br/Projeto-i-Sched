@@ -4,15 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CalendarController : MonoBehaviour
 {
-    [SerializeField]
-    Button[]               Days;                                                               //Botoes dos dias
+    public  Text[]               Days;                                                               //Texto dos dias
     [SerializeField]
     Text                        _ano, _mes;                                                         // Texto do ano e do mes
     int                         _firstDayOfMonth, _p,_currentShowType=0;                                               //Primeiro dia da semana do mes
     System.DateTime             day                         = System.DateTime.UtcNow.ToLocalTime(); //Dia atual
     System.DateTime             _day                        = System.DateTime.UtcNow.ToLocalTime(); //Copia do dia Atual
     [SerializeField]
-    GameObject[]                _showTypes; //tipos de visualizações possiveis
+    GameObject[]                _showTypes;
     bool                        _changeMonth                = false;
     private void Awake() {
         while(day.Day != 1){
@@ -46,11 +45,11 @@ public class CalendarController : MonoBehaviour
         }     
         for (int i = 0; i < 42; i++)
         { 
-            Days[i].GetComponentInChildren<Text>().text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
+            Days[i].text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
             if(day.AddDays(i-_firstDayOfMonth).Month != day.Month){
-                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,0.4f);
+                Days[i].color = new Color(255f,255f,255f,0.4f);
             }else{
-                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,1f);
+                Days[i].color = new Color(255f,255f,255f,1f);
             }
         }
 
@@ -89,11 +88,11 @@ public class CalendarController : MonoBehaviour
         }     
         for (int i = 0; i < 42; i++)
         { 
-            Days[i].GetComponentInChildren<Text>().text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
+            Days[i].text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
             if(day.AddDays(i-_firstDayOfMonth).Month != day.Month){
-                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,0.4f);
+                Days[i].color = new Color(255f,255f,255f,0.4f);
             }else{
-                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,1f);
+                Days[i].color = new Color(255f,255f,255f,1f);
             }
         }
     }

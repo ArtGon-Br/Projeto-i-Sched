@@ -9,7 +9,7 @@ public class DailyTasks : MonoBehaviour, IPointerClickHandler
     [SerializeField] [Range(1, 31)] int day;
     [SerializeField] [Range(1, 12)] int month;
 
-    List<Task> tasks;
+    List<TaskSO> tasks;
 
     void Awake()
     {

@@ -5,7 +5,6 @@ using Firebase;
 using Firebase.Firestore;
 using Firebase.Extensions;
 using TMPro;
-using System.Threading.Tasks;
 
 public class Query : MonoBehaviour
 {
@@ -58,37 +57,6 @@ public class Query : MonoBehaviour
             }
         });
     }
-    public static IEnumerator SearchForExistentTasks(string input, string tipo, DayMannager manager)
-    {
-        bool ready = false;
-        var Db = FirebaseFirestore.DefaultInstance;
-        List<TaskSO> tasks = new List<TaskSO>();
-
-        Debug.Log(string.Format("Querying by {0}...", char.ToUpper(input[0]) + input.Substring(1)));
-        CollectionReference trfRef = Db.Collection("tarefas");
-        Firebase.Firestore.Query query = trfRef.WhereEqualTo(tipo, char.ToUpper(input[0]) + input.Substring(1));
-
-        query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
-        {
-            foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
-            {
-                Dictionary<string, object> details = documentSnapshot.ToDictionary();
-                var task = ScriptableObject.CreateInstance<TaskSO>();
-
-                task.setHour(details["Hora"].ToString());
-                task.setName(details["Texto"].ToString());
-                Debug.Log(task.GetName());
-                tasks.Add(task);
-            }
-
-            ready = true;
-        });
-
-        yield return new WaitUntil(() => ready);
-        manager.tasks = tasks;
-        manager.ready = true;
-    }
-
 
     private void deleteClones()
     {

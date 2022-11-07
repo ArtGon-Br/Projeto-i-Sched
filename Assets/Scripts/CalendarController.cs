@@ -4,13 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CalendarController : MonoBehaviour
 {
-    public Text[]                       Days;                                                           //Texto dos dias
-    public Text                         _ano, _mes;                                                     // Texto do ano e do mes
-    private int                         _firstDayOfMonth, _p,_currentShowType=0;                        //Primeiro dia da semana do mes
-    private bool                        _changeMonth = false;
-    [SerializeField]GameObject[]        _showTypes;
-    private System.DateTime             day = System.DateTime.UtcNow.ToLocalTime();                     //Dia atual
-    private System.DateTime             _day = System.DateTime.UtcNow.ToLocalTime();                    //Copia do dia Atual
+    [SerializeField]
+    Button[]               Days;                                                               //Botoes dos dias
+    [SerializeField]
+    Text                        _ano, _mes;                                                         // Texto do ano e do mes
+    int                         _firstDayOfMonth, _p,_currentShowType=0;                                               //Primeiro dia da semana do mes
+    System.DateTime             day                         = System.DateTime.UtcNow.ToLocalTime(); //Dia atual
+    System.DateTime             _day                        = System.DateTime.UtcNow.ToLocalTime(); //Copia do dia Atual
+    [SerializeField]
+    GameObject[]                _showTypes; //tipos de visualizações possiveis
+    bool                        _changeMonth                = false;
     private void Awake() {
         while(day.Day != 1){
             day = day.AddDays(-1);
@@ -47,8 +50,7 @@ public class CalendarController : MonoBehaviour
             if(day.AddDays(i-_firstDayOfMonth).Month != day.Month){
                 Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,0.4f);
             }else{
-                Days[i].color = new Color(255f,255f,255f,1f);
-                StartCoroutine(Days[i].GetComponentInParent<DayMannager>().UpdateDay(Days[i].text, _mes.text, _ano.text));
+                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,1f);
             }
         }
 
@@ -91,8 +93,7 @@ public class CalendarController : MonoBehaviour
             if(day.AddDays(i-_firstDayOfMonth).Month != day.Month){
                 Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,0.4f);
             }else{
-                Days[i].color = new Color(255f,255f,255f,1f);
-                StartCoroutine(Days[i].GetComponentInParent<DayMannager>().UpdateDay(Days[i].text, _mes.text, _ano.text));
+                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,1f);
             }
         }
     }

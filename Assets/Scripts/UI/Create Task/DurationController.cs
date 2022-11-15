@@ -8,10 +8,10 @@ public class DurationController : MonoBehaviour
     [SerializeField] TMP_InputField hourInput;
     [SerializeField] TMP_InputField minInput;
 
-    private void OnEnable()
+    private void Awake()
     {
-        hourInput.SetTextWithoutNotify("00");
-        minInput.SetTextWithoutNotify("00");
+        /*hourInput.SetTextWithoutNotify("00");
+        minInput.SetTextWithoutNotify("00");*/
 
         hourInput.onEndEdit.AddListener(x =>
         {

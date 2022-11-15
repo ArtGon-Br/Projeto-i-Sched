@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CalendarController : MonoBehaviour
 {
-    public  Text[]               Days;                                                               //Texto dos dias
+    [SerializeField]
+    private  Button[]               Days;                                                               //Texto dos dias
     [SerializeField]
     Text                        _ano, _mes;                                                         // Texto do ano e do mes
     int                         _firstDayOfMonth, _p,_currentShowType=0;                                               //Primeiro dia da semana do mes
@@ -45,11 +46,11 @@ public class CalendarController : MonoBehaviour
         }     
         for (int i = 0; i < 42; i++)
         { 
-            Days[i].text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
+            Days[i].GetComponentInChildren<Text>().text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
             if(day.AddDays(i-_firstDayOfMonth).Month != day.Month){
-                Days[i].color = new Color(255f,255f,255f,0.4f);
+                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,0.4f);
             }else{
-                Days[i].color = new Color(255f,255f,255f,1f);
+                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,1f);
             }
         }
 
@@ -88,11 +89,11 @@ public class CalendarController : MonoBehaviour
         }     
         for (int i = 0; i < 42; i++)
         { 
-            Days[i].text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
+            Days[i].GetComponentInChildren<Text>().text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
             if(day.AddDays(i-_firstDayOfMonth).Month != day.Month){
-                Days[i].color = new Color(255f,255f,255f,0.4f);
+                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,0.4f);
             }else{
-                Days[i].color = new Color(255f,255f,255f,1f);
+                Days[i].GetComponentInChildren<Text>().color = new Color(255f,255f,255f,1f);
             }
         }
     }

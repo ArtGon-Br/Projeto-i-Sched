@@ -16,17 +16,17 @@ public class DailyTasksVisualization : MonoBehaviour
     [SerializeField] CanvasGroup canvasGroup;
     [SerializeField] TextMeshProUGUI dayText, dateText;
 
-    public void InstantiateTasks(List<Task> listTasks)
+    public void InstantiateTasks(List<TaskData> listTasks)
     {
         // Instanciar todas as taks presentes naquele dia
-        foreach (Task task in listTasks)
+        foreach (TaskData task in listTasks)
         {
             var temp = Instantiate(taskPrefab, tasksTrasform);
             temp.GetComponent<TaskUI>().SetTask(task);
         }
     }
     
-    public void Visualize(List<Task> _listTasks, DateTime date)
+    public void Visualize(List<TaskData> _listTasks, DateTime date)
     {
         InstantiateTasks(_listTasks);
         dayText.text = weekDays[date.DayOfWeek.ToString()];

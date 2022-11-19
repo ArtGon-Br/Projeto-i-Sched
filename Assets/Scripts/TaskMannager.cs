@@ -48,7 +48,7 @@ public class TaskMannager : MonoBehaviour
             m = int.Parse(_durationMinField.inputText.text);
         }
         _addButton.clickEvent.AddListener(() => {
-            var _taskController = new TaskController{
+            var _taskData = new TaskData{
                 Name = _nameField.inputText.text,
                 Description = _descriptionFIeld.inputText.text,
                 isFix = _isFixField.toggleObject.isOn,
@@ -66,7 +66,7 @@ public class TaskMannager : MonoBehaviour
             };
             var Firestore = FirebaseFirestore.DefaultInstance;
             Firestore.Collection(path:"users_sheet").Document(path:auth.CurrentUser.UserId.ToString()).SetAsync(_userData);
-            Firestore.Collection(path:"users_sheet").Document(path:auth.CurrentUser.UserId.ToString()).Collection(path:"Tasks").Document(path:tasks.ToString()).SetAsync(_taskController);
+            Firestore.Collection(path:"users_sheet").Document(path:auth.CurrentUser.UserId.ToString()).Collection(path:"Tasks").Document(path:tasks.ToString()).SetAsync(_taskData);
         });
     }
     private void OnDestroy() {

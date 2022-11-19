@@ -7,7 +7,7 @@ public class TaskUI : MonoBehaviour
     [SerializeField] TMP_Text taskNameField;
 
     //TODO: remover esse field do inspector
-    [SerializeField] Task currentTask;
+    [SerializeField] TaskData currentTask;
 
     private void Start()
     {
@@ -15,7 +15,7 @@ public class TaskUI : MonoBehaviour
     }
 
     // Essa função deve ser chamada toda vez que um Task UI for instanciado
-    public void SetTask(Task task)
+    public void SetTask(TaskData task)
     {
         currentTask = task;
         UpdateLabels();
@@ -23,9 +23,7 @@ public class TaskUI : MonoBehaviour
 
     void UpdateLabels()
     {
-        if (currentTask == null) return;
-
-        hourField.text = currentTask.GetHour();
-        taskNameField.text = currentTask.GetName();
+        //hourField.text = currentTask.GetHour();
+        //taskNameField.text = currentTask.GetName();
     }
 }

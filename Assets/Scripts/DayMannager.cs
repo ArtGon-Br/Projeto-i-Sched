@@ -12,7 +12,7 @@ public class DayMannager : MonoBehaviour, IPointerClickHandler
     [SerializeField][Range(1, 31)] int day;
     [SerializeField][Range(1, 12)] int month;
 
-    List<Task> tasks;
+    List<TaskData> tasks;
 
     void Awake()
     {

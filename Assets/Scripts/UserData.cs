@@ -7,10 +7,5 @@ using Firebase.Firestore;
 public struct UserData
 {
     [FirestoreProperty]
-    public string Username { get; set; }
-
-    [FirestoreProperty]
-    public string Password { get; set; }
-
     public int Tasks {get; set;}
 }

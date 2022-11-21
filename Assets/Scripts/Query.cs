@@ -80,4 +80,48 @@ public class Query : MonoBehaviour
         taskTransform.Find("Texto").GetComponent<TMP_Text>().text = details["Texto"].ToString();
         taskTransform.gameObject.SetActive(true);
     }
+
+    #region Static
+    public static IEnumerator SearchForExistentTasks(string input, string type, DayMannager manager)
+    {
+        bool ready = false;
+        var Db = FirebaseFirestore.DefaultInstance;
+        List<TaskData> tasks = new List<TaskData>();
+
+        Debug.Log(string.Format("Querying by {0}...", char.ToUpper(input[0]) + input.Substring(1)));
+        CollectionReference trfRef = Db.Collection("Tasks");
+
+        if(type == "Data")
+        {
+            var inputs = input.Split('/');
+            Firebase.Firestore.Query query = trfRef.WhereEqualTo("Day", int.Parse(inputs[0]))
+                                                   .WhereEqualTo("Month", int.Parse(inputs[1]))
+                                                   .WhereEqualTo("Year", inputs[2]);
+
+            query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
+            {
+                foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
+                {
+                    Dictionary<string, object> details = documentSnapshot.ToDictionary();
+                    var task = new TaskData();
+
+                    task.Hour = (int)details["Hour"];
+                    task.Name = details["Name"].ToString(); ;
+                    task.Description = details["Description"].ToString();
+                    Debug.Log(task.Name);
+                    tasks.Add(task);
+                }
+
+                ready = true;
+            });
+        }
+
+        
+
+        yield return new WaitUntil(() => ready);
+        manager.tasks = tasks;
+        manager.isReady();
+    }
+
+    #endregion
 }

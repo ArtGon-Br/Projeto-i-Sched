@@ -5,6 +5,10 @@ public class TaskScheduler : MonoBehaviour
 {
     [SerializeField] TaskRegisterer _registerer;
     [SerializeField] TaskBuilderFromUI _taskBuilder;
+
+    [Header("Messages")]
+    [SerializeField] GameObject createdTask;
+    [SerializeField] GameObject dayCommomTask;
    
     public void AllocateNewTaskOnServer()
     {
@@ -22,9 +26,14 @@ public class TaskScheduler : MonoBehaviour
         {
             AllocateTask(task);
             print("Tarefa salva no servidor");
-        }else
+
+            Instantiate(createdTask);
+        }
+        else
         {
             print("Já tem uma tarefa nesse mesmo dia!");
+
+            Instantiate(dayCommomTask);
         }
     }
 
@@ -32,6 +41,4 @@ public class TaskScheduler : MonoBehaviour
     {
         _registerer.RegisterTask(task);
     }
-
-
 }

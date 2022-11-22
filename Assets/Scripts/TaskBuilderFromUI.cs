@@ -27,8 +27,8 @@ public class TaskBuilderFromUI : MonoBehaviour
             Year = _yearField.dropdownItems[_yearField.selectedItemIndex].itemName,
             Hour = _hourField.selectedItemIndex,
             Min = _minField.selectedItemIndex,
-            DurationH = _durationHField.inputText.text,
-            DurationMin = _durationMinField.inputText.text,
+            HourDuration = int.Parse(_durationHField.inputText.text),
+            MinutesDuration = int.Parse(_durationMinField.inputText.text),
             Priority = _priorityField.index
         };
 

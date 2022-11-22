@@ -5,6 +5,7 @@ using Firebase.Extensions;
 using UnityEngine.Assertions;
 using System.Collections;
 using System;
+using System.Linq;
 
 public class TaskRegisterer : MonoBehaviour
 {
@@ -54,17 +55,35 @@ public class TaskRegisterer : MonoBehaviour
     {
         InitializeFirebase();
 
-        int count = -1;
+        int count = 0;
 
         var Firestore = FirebaseFirestore.DefaultInstance;
         var query = GetTaskCollection(Firestore).WhereEqualTo("Day", taskToAlocate.Day);
-
         bool finishThread = false;
+
         query.GetSnapshotAsync().ContinueWithOnMainThread(querySnapshot =>
         {
             Assert.IsNotNull(querySnapshot);
+            
+            DateTime targetStartTime = new DateTime(int.Parse(taskToAlocate.Year), int.Parse(taskToAlocate.Month), int.Parse(taskToAlocate.Day),
+                                            taskToAlocate.Hour, taskToAlocate.Min, 0);
 
-            count = querySnapshot.Result.Count;
+            DateTime endStartTime = targetStartTime.AddHours(taskToAlocate.HourDuration).AddMinutes(taskToAlocate.MinutesDuration);
+
+            var resultsList = querySnapshot.Result.ToList();
+            foreach(DocumentSnapshot result in resultsList)
+            {
+                TaskData task = result.ConvertTo<TaskData>();
+
+                DateTime start = new DateTime(int.Parse(task.Year), int.Parse(task.Month), int.Parse(task.Day), task.Hour, task.Min, 0);
+                DateTime end = start.AddHours(task.HourDuration).AddMinutes(task.MinutesDuration);
+
+                if (start >= endStartTime) continue;
+                if (end <= targetStartTime) continue;
+
+                count++;
+            }
+
             finishThread = true;
         });
 

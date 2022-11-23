@@ -5,10 +5,11 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase.Firestore;
+using System.Text;
 
-public class DayMannager : MonoBehaviour, IPointerClickHandler
+public class DayMannager : MonoBehaviour
 {
-    public List<TaskData> tasks;
+    private List<TaskData> tasks;
     [SerializeField] int year;
     [SerializeField] int day;
     [SerializeField] int month;
@@ -17,37 +18,64 @@ public class DayMannager : MonoBehaviour, IPointerClickHandler
                                                                    { "abr", 4 },    { "mai", 5 },   { "jun", 6 },
                                                                    { "jul", 7 },    { "ago", 8 },   { "set", 9 },
                                                                    { "out", 10 },   { "nov", 11 },  { "dez", 12 } };
-    void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+
+    private void Start()
     {
-        DateTime date = new DateTime(year, month, day);
-        FindObjectOfType<DailyTasksVisualization>().Visualize(tasks, date);
+        GetComponent<Button>().onClick.AddListener(() =>
+        {
+            if (tasks.Count == 0) return;
+            DateTime date = new DateTime(year, month, day);
+            FindObjectOfType<DailyTasksVisualization>().Visualize(tasks, date);
+        });
     }
 
     // Seta o componente Image caso o dia tenha alguma task, ou seja, deixa o dia no calendario com um tipo de highlight
-    void SetUI()
+    void SetUI(bool visuable)
     {
         // Filho do botao do dia possui uma imagem se mostra se existe tasks ou nao
-        var color = Color.white;
-        color.a = 0.25f;
+        Color color;
+        ColorUtility.TryParseHtmlString("#00FA27", out color);
+        color.a = visuable == true ? 0.25f: 0;
         transform.GetChild(1).GetComponent<Image>().color = color;
     }
+
     public void isReady() => ready = true;
-    public IEnumerator UpdateDay(string Day, string Mes, string Ano)
+    public void setTasks(List<TaskData> tasks) => this.tasks = tasks;
+    public void setDate(string Day, string Mes, string Ano)
     {
-        year = int.Parse(Ano);
+        int.TryParse(Ano, out year);
         month = months[Mes];
-        day = int.Parse(Day);
+        int.TryParse(Day, out day);
 
-        string _day = day < 10 ? "0" + day.ToString() : day.ToString();
-        string _month = month < 10 ? "0" + month.ToString() : month.ToString();
-        string _year = year.ToString();
-        string input = _day + "/" + _month + "/" + _year;
+        StartCoroutine(UpdateDay());
+    }
+    public void AddTask(string name, string hour, string minutes, string description)
+    {
+        TaskData newTask = new TaskData();
+        newTask.Name = name;
+        newTask.Hour = int.Parse(hour);
+        newTask.Min = int.Parse(minutes);
+        newTask.Description = description;
 
-        StartCoroutine(Query.SearchForExistentTasks(input, "Data", this));
+        if (tasks == null) tasks = new List<TaskData>();
+        tasks.Add(newTask);
+    }
+    private IEnumerator UpdateDay()
+    {
+        tasks = new List<TaskData>();
+
+        StringBuilder builder = new StringBuilder();
+        builder.Append(day.ToString());
+        builder.Append("/");
+        builder.Append(month.ToString());
+        builder.Append("/");
+        builder.Append(year.ToString());
+
+        ready = false;
+        Query.SearchForExistentTasks(builder.ToString(), "Data", this);
 
         yield return new WaitUntil(() => ready);
-        ready = false;
-        print(tasks.Count);
-        if (tasks.Count != 0) SetUI();
+
+        SetUI(tasks.Count > 0);
     }
 }

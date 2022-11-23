@@ -104,7 +104,7 @@ public class TaskRegisterer : MonoBehaviour
 
     private void OnDestroy()
     {
-        _listenerRegistration.Stop();
+        if(_listenerRegistration!= null) _listenerRegistration.Stop();
     }
 
 }

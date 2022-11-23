@@ -18,6 +18,8 @@ public class DailyTasksVisualization : MonoBehaviour
 
     public void InstantiateTasks(List<TaskData> listTasks)
     {
+        tasksTrasform.DeleteChildren();
+
         // Instanciar todas as taks presentes naquele dia
         foreach (TaskData task in listTasks)
         {

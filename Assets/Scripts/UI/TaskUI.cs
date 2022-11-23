@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using System.Text;
+using System.Linq;
 
 public class TaskUI : MonoBehaviour
 {
@@ -18,12 +20,30 @@ public class TaskUI : MonoBehaviour
     public void SetTask(TaskData task)
     {
         currentTask = task;
-        UpdateLabels();
+        UpdateLabelsInDailyVisualization();
     }
 
     void UpdateLabels()
     {
-        //hourField.text = currentTask.GetHour();
-        //taskNameField.text = currentTask.GetName();
+        
+    }
+
+    void UpdateLabelsInDailyVisualization()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.Append(currentTask.Hour.ToString());
+        builder.Append(":");
+        if(currentTask.Min < 10)
+        {
+            builder.Append("0");
+        }
+        builder.Append(currentTask.Min.ToString());
+        
+        hourField.text = builder.ToString();
+        builder.Clear();
+
+        builder.Append(currentTask.Name[0].ToString().ToUpper());
+        builder.Append(currentTask.Name.Substring(1, currentTask.Name.Length - 1));
+        taskNameField.text = builder.ToString();
     }
 }

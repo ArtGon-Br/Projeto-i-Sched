@@ -14,7 +14,9 @@ public class CalendarController : MonoBehaviour
     [SerializeField]
     GameObject[]                _showTypes;
     bool                        _changeMonth                = false;
-    private void Awake() {
+
+
+    private void Start() {
         while(day.Day != 1){
             day = day.AddDays(-1);
         }
@@ -52,7 +54,7 @@ public class CalendarController : MonoBehaviour
                 temp.color = new Color(255f,255f,255f,0.4f);
             }else{
                 temp.color = new Color(255f,255f,255f,1f);
-                StartCoroutine(Days[i].GetComponentInParent<DayMannager>().UpdateDay(temp.text, _mes.text, _ano.text));
+                Days[i].GetComponent<DayMannager>().setDate(temp.text, _mes.text, _ano.text);
             }
         }
 
@@ -97,7 +99,7 @@ public class CalendarController : MonoBehaviour
                 temp.color = new Color(255f,255f,255f,0.4f);
             }else{
                 temp.color = new Color(255f,255f,255f,1f);
-                StartCoroutine(Days[i].GetComponentInParent<DayMannager>().UpdateDay(temp.text, _mes.text, _ano.text));
+                Days[i].GetComponent<DayMannager>().setDate(temp.text, _mes.text, _ano.text);
             }
         }
     }

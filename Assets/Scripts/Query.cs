@@ -82,13 +82,12 @@ public class Query : MonoBehaviour
     }
 
     #region Static
-    public static IEnumerator SearchForExistentTasks(string input, string type, DayMannager manager)
+    public static void SearchForExistentTasks(string input, string type, DayMannager manager)
     {
-        bool ready = false;
         var Db = FirebaseFirestore.DefaultInstance;
         List<TaskData> tasks = new List<TaskData>();
 
-        Debug.Log(string.Format("Querying by {0}...", char.ToUpper(input[0]) + input.Substring(1)));
+        //Debug.Log(string.Format("Querying by {0}...", char.ToUpper(input[0]) + input.Substring(1)));
         CollectionReference trfRef = Db.Collection("Tasks");
 
         if(type == "Data")
@@ -98,29 +97,22 @@ public class Query : MonoBehaviour
                                                    .WhereEqualTo("Month", int.Parse(inputs[1]))
                                                    .WhereEqualTo("Year", inputs[2]);
 
-            query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
+            query.GetSnapshotAsync().ContinueWith((querySnapshotTask) =>
             {
                 foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
                 {
+                    if (query.GetSnapshotAsync().IsCanceled) break;
                     Dictionary<string, object> details = documentSnapshot.ToDictionary();
-                    var task = new TaskData();
-
-                    task.Hour = (int)details["Hour"];
-                    task.Name = details["Name"].ToString(); ;
-                    task.Description = details["Description"].ToString();
-                    Debug.Log(task.Name);
-                    tasks.Add(task);
+                    Debug.Log($"Found it {details["Name"]}");
+                    manager.AddTask(details["Name"].ToString(), 
+                                    details["Hour"].ToString(), 
+                                    details["Min"].ToString(), 
+                                    details["Description"].ToString());
                 }
-
-                ready = true;
+                print("DONE");
+                manager.isReady();
             });
         }
-
-        
-
-        yield return new WaitUntil(() => ready);
-        manager.tasks = tasks;
-        manager.isReady();
     }
 
     #endregion

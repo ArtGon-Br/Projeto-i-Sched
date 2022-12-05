@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class TaskScheduler : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class TaskScheduler : MonoBehaviour
 
         yield return StartCoroutine(_registerer.GetConflictedTaks(task, x => count = x));
 
-        if(count == 0)
+        if (count == 0)
         {
             AllocateTask(task);
             print("Tarefa salva no servidor");

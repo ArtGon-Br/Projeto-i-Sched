@@ -68,7 +68,7 @@ public class TaskRegisterer : MonoBehaviour
             DateTime targetStartTime = new DateTime(int.Parse(taskToAlocate.Year), int.Parse(taskToAlocate.Month), int.Parse(taskToAlocate.Day),
                                             taskToAlocate.Hour, taskToAlocate.Min, 0);
 
-            DateTime endStartTime = targetStartTime.AddHours(taskToAlocate.HourDuration).AddMinutes(taskToAlocate.MinutesDuration);
+            DateTime targetEndTime = targetStartTime.AddHours(taskToAlocate.HourDuration).AddMinutes(taskToAlocate.MinutesDuration);
 
             var resultsList = querySnapshot.Result.ToList();
             foreach(DocumentSnapshot result in resultsList)
@@ -78,7 +78,7 @@ public class TaskRegisterer : MonoBehaviour
                 DateTime start = new DateTime(int.Parse(task.Year), int.Parse(task.Month), int.Parse(task.Day), task.Hour, task.Min, 0);
                 DateTime end = start.AddHours(task.HourDuration).AddMinutes(task.MinutesDuration);
 
-                if (start >= endStartTime) continue;
+                if (start >= targetEndTime) continue;
                 if (end <= targetStartTime) continue;
 
                 count++;

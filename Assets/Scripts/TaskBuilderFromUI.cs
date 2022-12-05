@@ -15,6 +15,14 @@ public class TaskBuilderFromUI : MonoBehaviour
     [SerializeField] private CustomInputField _durationMinField;
     [SerializeField] private HorizontalSelector _priorityField;
 
+    [Header("Fixed task")]
+    [SerializeField] private CustomDropdown _dayFromField;
+    [SerializeField] private CustomDropdown _monthFromField;
+    [SerializeField] private CustomDropdown _yearFromField;
+    [SerializeField] private CustomDropdown _dayToField;
+    [SerializeField] private CustomDropdown _monthToField;
+    [SerializeField] private CustomDropdown _yearToField;
+
     public TaskData BuildTaskFromUI()
     {
         TaskData newTask = new TaskData

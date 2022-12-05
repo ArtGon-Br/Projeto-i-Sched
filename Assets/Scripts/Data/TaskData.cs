@@ -37,4 +37,11 @@ public struct TaskData
     [FirestoreProperty]
     public int MinutesDuration { get; set; }
 
+    [FirestoreProperty]
+    public int DayTo { get; set; }
+    [FirestoreProperty]
+    public string MonthTo { get; set; }
+    [FirestoreProperty]
+    public string YearTo { get; set; }
+
 }

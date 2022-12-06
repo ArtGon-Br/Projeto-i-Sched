@@ -38,10 +38,12 @@ public struct TaskData
     public int MinutesDuration { get; set; }
 
     [FirestoreProperty]
-    public int DayTo { get; set; }
+    public string DayTo { get; set; }
     [FirestoreProperty]
     public string MonthTo { get; set; }
     [FirestoreProperty]
     public string YearTo { get; set; }
 
+    [FirestoreProperty]
+    public string RepeatDays { get; set; }
 }

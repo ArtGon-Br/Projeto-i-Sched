@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using Firebase;
 using Firebase.Auth;
 using TMPro;
+using UnityEngine.UI;
 
 public class LoginAuth : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class LoginAuth : MonoBehaviour
     [SerializeField] GameObject loginButton;
     [SerializeField] GameObject loadingCircle;
     [SerializeField] string dashboardScene = "Main";
+    [SerializeField] Toggle toggle;
     [Space]
     [SerializeField] UnityEvent OnSuccesfullyLogged;
 
@@ -21,6 +23,11 @@ public class LoginAuth : MonoBehaviour
     {
         messageBox.enabled = false;
         loadingCircle.SetActive(false);
+
+        toggle.onValueChanged.AddListener((value) => 
+        { if (value) FirebaseAuthenticator.dontRememberMe = false;
+            else FirebaseAuthenticator.dontRememberMe = true;
+        }); 
     }
 
     void LogMessage(string message)
@@ -29,7 +36,9 @@ public class LoginAuth : MonoBehaviour
         messageBox.text = message;
     }
 
-    public void LoginButton(){
+    public void LoginButton()
+    {
+        FirebaseAuthenticator.dontRememberMe = !toggle.isOn;
         StartCoroutine(StartLogin(emailInputfield.text, passwordInputfield.text));
     }
 
@@ -106,4 +115,6 @@ public class LoginAuth : MonoBehaviour
         OnSuccesfullyLogged.Invoke();
         SceneController.Instance.LoadScene(dashboardScene);
     }
+
+
 }

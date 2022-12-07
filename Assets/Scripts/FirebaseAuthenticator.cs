@@ -61,8 +61,7 @@ public class FirebaseAuthenticator : MonoBehaviour
     void AutoLogin()
     {
         Debug.LogFormat("User Signed in successfully: {0} {1}", FirebaseAuthenticator.instance.User.DisplayName, FirebaseAuthenticator.instance.User.Email);
-
-        var load = Instantiate(loadingScreen);
+        Instantiate(loadingScreen);
     }
 
     public void Logout()

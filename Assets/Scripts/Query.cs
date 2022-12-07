@@ -45,6 +45,10 @@ public class Query : MonoBehaviour
         string inputText = input.text.ToString();
 
         deleteClones();
+        if(inputText == "") {
+            GetFirstData();
+            return;
+        }
 
         Debug.Log(string.Format("Querying by {0}...", char.ToUpper(inputText[0]) + inputText.Substring(1)));
         CollectionReference trfRef = db.Collection("tarefas");

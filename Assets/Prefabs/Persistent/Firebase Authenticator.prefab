@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dependecyStatus: 0
+  loadingScreen: {fileID: 8982843733272147258, guid: 9dd698dd7f1e4cf43acb1361efe860cf, type: 3}

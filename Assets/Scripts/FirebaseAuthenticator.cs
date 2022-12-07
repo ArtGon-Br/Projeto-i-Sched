@@ -4,6 +4,7 @@ using UnityEngine;
 using Firebase;
 using Firebase.Auth;
 using UnityEngine.SceneManagement;
+using System;
 
 public class FirebaseAuthenticator : MonoBehaviour
 {
@@ -61,9 +62,7 @@ public class FirebaseAuthenticator : MonoBehaviour
     {
         Debug.LogFormat("User Signed in successfully: {0} {1}", FirebaseAuthenticator.instance.User.DisplayName, FirebaseAuthenticator.instance.User.Email);
 
-        SceneManager.LoadSceneAsync("Main",LoadSceneMode.Single);
-
-        Instantiate(loadingScreen);
+        var load = Instantiate(loadingScreen);
     }
 
     public void Logout()

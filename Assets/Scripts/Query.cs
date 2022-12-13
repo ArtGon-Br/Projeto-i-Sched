@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,15 +40,30 @@ public class Query : MonoBehaviour
         });
     } 
 
+    //create trigram from string
+    public string[] triGram(string str) {
+        List<string> trigrams = new List<string>();
+        trigrams.Add(str);
+        for(int i = 0; i < str.Length - 2; i++) {
+            trigrams.Add(str.Substring(i, 3));
+        }
+        return trigrams.ToArray();
+    }
+
     // get fb data
     public void GetData()
     {
         string inputText = input.text.ToString();
 
         deleteClones();
+        if(inputText == "") {
+            GetFirstData();
+            return;
+        }
 
         Debug.Log(string.Format("Querying by {0}...", char.ToUpper(inputText[0]) + inputText.Substring(1)));
         CollectionReference trfRef = db.Collection("tarefas");
+        // Array.ForEach(triGram(char.ToUpper(inputText[0]) + inputText.Substring(1)), Debug.Log);
         Firebase.Firestore.Query query = trfRef.WhereEqualTo("Texto", char.ToUpper(inputText[0]) + inputText.Substring(1));
         query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
         {

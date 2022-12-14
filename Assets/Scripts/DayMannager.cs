@@ -49,16 +49,10 @@ public class DayMannager : MonoBehaviour
 
         StartCoroutine(UpdateDay());
     }
-    public void AddTask(string name, string hour, string minutes, string description)
+    public void AddTask(TaskData data)
     {
-        TaskData newTask = new TaskData();
-        newTask.Name = name;
-        newTask.Hour = int.Parse(hour);
-        newTask.Min = int.Parse(minutes);
-        newTask.Description = description;
-
         if (tasks == null) tasks = new List<TaskData>();
-        tasks.Add(newTask);
+        tasks.Add(data);
     }
     private IEnumerator UpdateDay()
     {

@@ -98,7 +98,7 @@ public class Query : MonoBehaviour
     }
 
     #region Static
-    public static void SearchForExistentTasks(string input, string type, DayMannager manager)
+    public static List<TaskData> SearchForExistentTasks(string input, string type, DayMannager manager = null)
     {
         var Db = FirebaseFirestore.DefaultInstance;
         List<TaskData> tasks = new List<TaskData>();
@@ -120,15 +120,29 @@ public class Query : MonoBehaviour
                     if (query.GetSnapshotAsync().IsCanceled) break;
                     Dictionary<string, object> details = documentSnapshot.ToDictionary();
                     Debug.Log($"Found it {details["Name"]}");
-                    manager.AddTask(details["Name"].ToString(), 
-                                    details["Hour"].ToString(), 
-                                    details["Min"].ToString(), 
-                                    details["Description"].ToString());
+
+                    TaskData task = new TaskData();
+                    task.Name = details["Name"].ToString();
+                    task.Description = details["Description"].ToString();
+                    task.Hour = int.Parse(details["Hour"].ToString());
+                    task.Min = int.Parse(details["Min"].ToString());
+                    tasks.Add(task);
+
+                    if (manager != null)
+                    {
+                        manager.AddTask(task);
+                    }
                 }
-                print("DONE");
-                manager.isReady();
+
+                if(manager != null)
+                {
+                    print("DONE");
+                    manager.isReady();
+                }
             });
         }
+
+        return tasks;
     }
 
     #endregion

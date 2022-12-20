@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Firebase.Firestore;
 using System.Text;
+using System.Linq;
 
 public class DayMannager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class DayMannager : MonoBehaviour
     [SerializeField] int year;
     [SerializeField] int day;
     [SerializeField] int month;
-    private bool ready;
+    [SerializeField] int taskCount;
     Dictionary<string, int> months = new Dictionary<string, int> { { "jan", 1 },    { "fev", 2 },   { "mar", 3 },
                                                                    { "abr", 4 },    { "mai", 5 },   { "jun", 6 },
                                                                    { "jul", 7 },    { "ago", 8 },   { "set", 9 },
@@ -30,17 +31,21 @@ public class DayMannager : MonoBehaviour
     }
 
     // Seta o componente Image caso o dia tenha alguma task, ou seja, deixa o dia no calendario com um tipo de highlight
-    void SetUI(bool visuable)
+    void SetUI(bool hasTasks, bool dayPassed)
     {
         // Filho do botao do dia possui uma imagem se mostra se existe tasks ou nao
         Color color;
         ColorUtility.TryParseHtmlString("#00FA27", out color);
-        color.a = visuable == true ? 0.25f: 0;
+        color.a = hasTasks ? 0.25f: 0;
         transform.GetChild(1).GetComponent<Image>().color = color;
+
+        color = Color.white;
+        color.a = dayPassed ? 0.95f : 1f;
+        GetComponent<Image>().color = color;
+        transform.GetChild(0).GetComponent<Text>().color = color;
+        GetComponent<Button>().interactable = !dayPassed;
     }
 
-    public void isReady() => ready = true;
-    public void setTasks(List<TaskData> tasks) => this.tasks = tasks;
     public void setDate(string Day, string Mes, string Ano)
     {
         int.TryParse(Ano, out year);
@@ -49,15 +54,9 @@ public class DayMannager : MonoBehaviour
 
         StartCoroutine(UpdateDay());
     }
-    public void AddTask(TaskData data)
-    {
-        if (tasks == null) tasks = new List<TaskData>();
-        tasks.Add(data);
-    }
+    
     private IEnumerator UpdateDay()
     {
-        tasks = new List<TaskData>();
-
         StringBuilder builder = new StringBuilder();
         builder.Append(day.ToString());
         builder.Append("/");
@@ -65,11 +64,34 @@ public class DayMannager : MonoBehaviour
         builder.Append("/");
         builder.Append(year.ToString());
 
-        ready = false;
-        Query.SearchForExistentTasks(builder.ToString(), "Data", this);
+        Query.SearchForExistentTasks(builder.ToString(), "Data");
+        yield return new WaitUntil(() => Query.searchingEnd);
 
-        yield return new WaitUntil(() => ready);
+        tasks = new List<TaskData>(Query.GetTasksFounded());
+        CheckTasksInSpeficDate();
+        taskCount = tasks.Count;
 
-        SetUI(tasks.Count > 0);
+        SetUI(tasks.Count > 0 && !isDayPassed(), isDayPassed());
+    }
+
+    private bool isDayPassed()
+    {
+        int _year = DateTime.Now.Year;
+        int _month = DateTime.Now.Month;
+        int _day = DateTime.Now.Day;
+
+        if (year < _year) return true;
+        if (month < _month && year == _year) return true;
+        if (day < _day && month == _month && year == _year) return true;
+
+        return false;
+    }
+    private void CheckTasksInSpeficDate()
+    {
+        var correctTasks = tasks.Where(t => t.Day == day.ToString())
+                              .Where(t => t.Month == month.ToString())
+                              .Where(t => t.Year == year.ToString()).ToList();
+
+        tasks = correctTasks;
     }
 }

@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 using UnityEngine;
 using Firebase;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using Firebase.Auth;
 using TMPro;
 
 public class Query : MonoBehaviour
@@ -12,8 +15,11 @@ public class Query : MonoBehaviour
     [SerializeField] TMP_InputField input;
     [SerializeField] Transform viewport;
     [SerializeField] Transform task;
-    FirebaseFirestore db;
+    static FirebaseFirestore db;
     Transform[] clones;
+
+    public static bool searchingEnd;
+    private static List<TaskData> tasksFounded = new List<TaskData>();
 
     // Start is called before the first frame update
     void Start()
@@ -98,52 +104,59 @@ public class Query : MonoBehaviour
     }
 
     #region Static
-    public static List<TaskData> SearchForExistentTasks(string input, string type, DayMannager manager = null)
+    public static void SearchForExistentTasks(string input, string type)
     {
+        var auth = FirebaseAuth.DefaultInstance;
         var Db = FirebaseFirestore.DefaultInstance;
-        List<TaskData> tasks = new List<TaskData>();
 
-        //Debug.Log(string.Format("Querying by {0}...", char.ToUpper(input[0]) + input.Substring(1)));
-        CollectionReference trfRef = Db.Collection("Tasks");
+        tasksFounded.Clear();
+        tasksFounded = new List<TaskData>();
+        searchingEnd = false;
 
-        if(type == "Data")
+        CollectionReference trfRef = Db.Collection(path: "users_sheet").Document(path: auth.CurrentUser.UserId.ToString()).Collection(path: "Tasks");
+
+        if (type == "Data")
         {
             var inputs = input.Split('/');
-            Firebase.Firestore.Query query = trfRef.WhereEqualTo("Day", int.Parse(inputs[0]))
-                                                   .WhereEqualTo("Month", int.Parse(inputs[1]))
-                                                   .WhereEqualTo("Year", inputs[2]);
+            Firebase.Firestore.Query query = trfRef;
 
             query.GetSnapshotAsync().ContinueWith((querySnapshotTask) =>
             {
-                foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
+                if (querySnapshotTask.IsCanceled) return;
+
+                List<DocumentSnapshot> tasksFound;
+                tasksFound = querySnapshotTask.Result.Documents.Where(t => t.ToDictionary()["Day"].ToString() == inputs[0])
+                                                               .Where(t => t.ToDictionary()["Month"].ToString() == inputs[1])
+                                                               .Where(t => t.ToDictionary()["Year"].ToString() == inputs[2]).ToList();
+
+                if(tasksFound.Count > 0) print($"{input} > {tasksFound.Count}");
+                foreach (var t in tasksFound)
                 {
-                    if (query.GetSnapshotAsync().IsCanceled) break;
-                    Dictionary<string, object> details = documentSnapshot.ToDictionary();
-                    Debug.Log($"Found it {details["Name"]}");
-
-                    TaskData task = new TaskData();
-                    task.Name = details["Name"].ToString();
-                    task.Description = details["Description"].ToString();
-                    task.Hour = int.Parse(details["Hour"].ToString());
-                    task.Min = int.Parse(details["Min"].ToString());
-                    tasks.Add(task);
-
-                    if (manager != null)
-                    {
-                        manager.AddTask(task);
-                    }
+                    Dictionary<string, object> details = t.ToDictionary();
+                    TaskData task = SetNewTask(details);
+                    tasksFounded.Add(task);
                 }
-
-                if(manager != null)
-                {
-                    print("DONE");
-                    manager.isReady();
-                }
+                searchingEnd = true;
             });
         }
 
-        return tasks;
     }
-
+    public static List<TaskData> GetTasksFounded() 
+    { 
+        List<TaskData> tasks = new List<TaskData>(tasksFounded);
+        return tasks; 
+    }
+    private static TaskData SetNewTask(Dictionary<string, object> details)
+    {
+        TaskData task = new TaskData();
+        task.Name = details["Name"].ToString();
+        task.Day = details["Day"].ToString();
+        task.Month = details["Month"].ToString();
+        task.Year = details["Year"].ToString();
+        task.Description = details["Description"].ToString();
+        task.Hour = int.Parse(details["Hour"].ToString());
+        task.Min = int.Parse(details["Min"].ToString());
+        return task;
+    }
     #endregion
 }

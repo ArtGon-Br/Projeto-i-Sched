@@ -1,23 +1,30 @@
+using Michsky.UI.ModernUIPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class CalendarController : MonoBehaviour
 {
-    [SerializeField]
-    private  Button[]           Days;                                                               //Texto dos dias
-    [SerializeField]
-    Text                        _ano, _mes;                                                         // Texto do ano e do mes
-    int                         _firstDayOfMonth, _p,_currentShowType=0;                                               //Primeiro dia da semana do mes
-    System.DateTime             day                         = System.DateTime.UtcNow.ToLocalTime(); //Dia atual
-    System.DateTime             _day                        = System.DateTime.UtcNow.ToLocalTime(); //Copia do dia Atual
-    [SerializeField]
-    GameObject[]                _showTypes;
-    bool                        _changeMonth                = false;
+    int _firstDayOfMonth;                                                           //Primeiro dia da semana do mes
+    int _currentShowType                = 0;
+    bool _changeMonth                   = false;
+    System.DateTime day                 = System.DateTime.UtcNow.ToLocalTime();     //Dia atual
+    [SerializeField] Button[] Days;                                                 //Texto dos dias
+    [SerializeField] GameObject[] _showTypes;
+    [SerializeField] Text _ano, _mes;                                               // Texto do ano e do mes
 
+    [SerializeField] WindowManager window;
 
-    private void Start() {
-        while(day.Day != 1){
+    private void Start()
+    {
+
+    }
+
+    public void Initialize()
+    {
+        if (window.currentWindowIndex != 1) return;
+        while (day.Day != 1)
+        {
             day = day.AddDays(-1);
         }
         _ano.text = day.Year.ToString();
@@ -26,38 +33,43 @@ public class CalendarController : MonoBehaviour
         {
             case "Monday":
                 _firstDayOfMonth = 1;
-            break;
+                break;
             case "Tuesday":
                 _firstDayOfMonth = 2;
-            break;
+                break;
             case "Wednesday":
                 _firstDayOfMonth = 3;
-            break;
+                break;
             case "Thursday":
                 _firstDayOfMonth = 4;
-            break;
+                break;
             case "Friday":
                 _firstDayOfMonth = 5;
-            break;
+                break;
             case "Saturday":
                 _firstDayOfMonth = 6;
-            break;
+                break;
             case "Sunday":
                 _firstDayOfMonth = 0;
-            break;
-        }     
+                break;
+        }
         for (int i = 0; i < 42; i++)
         {
             var temp = Days[i].GetComponentInChildren<Text>();
-            temp.text = day.AddDays(i-_firstDayOfMonth).Day.ToString();
-            if(day.AddDays(i-_firstDayOfMonth).Month != day.Month){
-                temp.color = new Color(255f,255f,255f,0.4f);
-            }else{
-                temp.color = new Color(255f,255f,255f,1f);
+            temp.text = day.AddDays(i - _firstDayOfMonth).Day.ToString();
+
+            if (day.AddDays(i - _firstDayOfMonth).Month != day.Month)
+            {
+                Days[i].GetComponent<Image>().color = new Color(255f, 255f, 255f, 0.5f);
+                Days[i].interactable = false;
+                temp.color = new Color(255f, 255f, 255f, 0.5f);
+            }
+            else
+            {
+                temp.color = new Color(255f, 255f, 255f, 1f);
                 Days[i].GetComponent<DayMannager>().setDate(temp.text, _mes.text, _ano.text);
             }
         }
-
     }
 
     public void ChangeMonth(int p){

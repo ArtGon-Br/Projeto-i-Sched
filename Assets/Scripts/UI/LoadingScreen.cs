@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class LoadingScreen : MonoBehaviour
 {
     [SerializeField] Image loadImage;
+    public static bool loading;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class LoadingScreen : MonoBehaviour
         yield return null;
 
         var operation = SceneManager.LoadSceneAsync("Main", LoadSceneMode.Single);
+        loading = true;
 
         operation.allowSceneActivation = false;
         while (!operation.isDone)
@@ -33,6 +35,7 @@ public class LoadingScreen : MonoBehaviour
                 operation.allowSceneActivation = true;
                 yield return new WaitForSeconds(2);
                 Debug.Log("Loading completed");
+                loading = false;
                 Destroy(gameObject.transform.parent.gameObject);
             }
             yield return null;

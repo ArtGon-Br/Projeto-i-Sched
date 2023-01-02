@@ -1,14 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
 using UnityEngine;
-using Firebase;
 using Firebase.Firestore;
 using Firebase.Extensions;
 using Firebase.Auth;
 using TMPro;
+using System;
 
 public class Query : MonoBehaviour
 {
@@ -141,21 +138,20 @@ public class Query : MonoBehaviour
         }
 
     }
+
     public static List<TaskData> GetTasksFounded() 
     { 
         List<TaskData> tasks = new List<TaskData>(tasksFounded);
         return tasks; 
     }
+
     private static TaskData SetNewTask(Dictionary<string, object> details)
     {
         TaskData task = new TaskData();
         task.Name = details["Name"].ToString();
-        task.Day = details["Day"].ToString();
-        task.Month = details["Month"].ToString();
-        task.Year = details["Year"].ToString();
         task.Description = details["Description"].ToString();
-        task.Hour = int.Parse(details["Hour"].ToString());
-        task.Min = int.Parse(details["Min"].ToString());
+        task.StartTime = DateTime.Parse(details["StartTime"].ToString());
+        task.EndTime = DateTime.Parse(details["EndTime"].ToString());
         return task;
     }
     #endregion

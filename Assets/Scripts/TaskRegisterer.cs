@@ -19,7 +19,7 @@ public class TaskRegisterer : MonoBehaviour
 
     private void Start()
     {
-        //InitializeFirebase();
+        InitializeFirebase();
     }
 
     private void InitializeFirebase()
@@ -40,7 +40,7 @@ public class TaskRegisterer : MonoBehaviour
 
     public void RegisterTask(TaskData newTask)
     {
-        InitializeFirebase();
+        //InitializeFirebase();
 
         var _userData = new UserData
         {
@@ -56,7 +56,7 @@ public class TaskRegisterer : MonoBehaviour
 
     public void UpdateTask(TaskData taskToUpdate)
     {
-        InitializeFirebase();
+        //InitializeFirebase();
 
         var Firestore = FirebaseFirestore.DefaultInstance;
         Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: taskToUpdate.Index.ToString()).SetAsync(taskToUpdate);
@@ -64,7 +64,7 @@ public class TaskRegisterer : MonoBehaviour
 
     public IEnumerator GetConflictedTaks(TaskData taskToAlocate, Action<List<TaskData>> OnGetConflictedTasks)
     {
-        InitializeFirebase();
+        //InitializeFirebase();
 
         List<TaskData> conflictedTasks = new List<TaskData>();
 
@@ -78,7 +78,7 @@ public class TaskRegisterer : MonoBehaviour
         var Firestore = FirebaseFirestore.DefaultInstance;
         List<TaskData> conflictedTasks = new List<TaskData>();
 
-        var query = GetTaskCollection(Firestore).WhereNotEqualTo("StartTime", taskToAlocate.StartTime);
+        var query = GetTaskCollection(Firestore).WhereNotEqualTo("Index", taskToAlocate.Index);
         bool finishThread = false;
 
         query.GetSnapshotAsync().ContinueWithOnMainThread(querySnapshot =>

@@ -18,4 +18,7 @@ public struct TaskData
 
     [FirestoreProperty]
     public DateTime EndTime { get; set; }
+
+    [FirestoreProperty]
+    public int Index { get; set; }
 }

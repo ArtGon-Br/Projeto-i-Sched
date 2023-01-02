@@ -6,6 +6,7 @@ using UnityEngine.Assertions;
 using System.Collections;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 public class TaskRegisterer : MonoBehaviour
 {
@@ -46,26 +47,36 @@ public class TaskRegisterer : MonoBehaviour
             Tasks = _tasks + 1
         };
 
+        newTask.Index = _tasks;
+
         var Firestore = FirebaseFirestore.DefaultInstance;
         Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).SetAsync(_userData);
-        Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: _tasks.ToString()).SetAsync(newTask);
+        Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: newTask.Index.ToString()).SetAsync(newTask);
     }
 
-    public IEnumerator GetConflictedTaks(TaskData taskToAlocate, Action<int> OnGetConflictedTasks)
+    public void UpdateTask(TaskData taskToUpdate)
     {
         InitializeFirebase();
 
-        int count = 0;
-
-        yield return StartCoroutine(GetConflictedTaskInDay(taskToAlocate, (x) => count = x));
-
-        OnGetConflictedTasks?.Invoke(count);
+        var Firestore = FirebaseFirestore.DefaultInstance;
+        Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: taskToUpdate.Index.ToString()).SetAsync(taskToUpdate);
     }
 
-    private IEnumerator GetConflictedTaskInDay(TaskData taskToAlocate, Action<int> OnGetConflictedTasks)
+    public IEnumerator GetConflictedTaks(TaskData taskToAlocate, Action<List<TaskData>> OnGetConflictedTasks)
+    {
+        InitializeFirebase();
+
+        List<TaskData> conflictedTasks = new List<TaskData>();
+
+        yield return StartCoroutine(GetConflictedTaskInDay(taskToAlocate, (x) => conflictedTasks = x));
+
+        OnGetConflictedTasks?.Invoke(conflictedTasks);
+    }
+
+    private IEnumerator GetConflictedTaskInDay(TaskData taskToAlocate, Action<List<TaskData>> OnGetConflictedTasks)
     {
         var Firestore = FirebaseFirestore.DefaultInstance;
-        int count = 0;
+        List<TaskData> conflictedTasks = new List<TaskData>();
 
         var query = GetTaskCollection(Firestore).WhereNotEqualTo("StartTime", taskToAlocate.StartTime);
         bool finishThread = false;
@@ -82,7 +93,7 @@ public class TaskRegisterer : MonoBehaviour
                 if (task.StartTime >= taskToAlocate.EndTime) continue;
                 if (task.EndTime <= taskToAlocate.StartTime) continue;
 
-                count++;
+                conflictedTasks.Add(task);
             }
 
             finishThread = true;
@@ -90,7 +101,7 @@ public class TaskRegisterer : MonoBehaviour
 
         yield return new WaitUntil(() => finishThread == true);
 
-        OnGetConflictedTasks?.Invoke(count);
+        OnGetConflictedTasks?.Invoke(conflictedTasks);
     }
 
     private CollectionReference GetTaskCollection(FirebaseFirestore Firestore)

@@ -27,7 +27,8 @@ public class TaskBuilderFromUI : MonoBehaviour
             Description = _descriptionFIeld.inputText.text,
             Priority = _priorityField.index,
             StartTime = DateTime.UtcNow,
-            EndTime = endTime
+            EndTime = endTime,
+            Index = -1
         };
 
         return newTask;

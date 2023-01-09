@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 using System.Collections;
 using System;
 using System.Linq;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using System.Collections.Generic;
 
 public class TaskRegisterer : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class TaskRegisterer : MonoBehaviour
 
     private void Start()
     {
-        //InitializeFirebase();
+        InitializeFirebase();
     }
 
     private void InitializeFirebase()
@@ -40,81 +40,60 @@ public class TaskRegisterer : MonoBehaviour
 
     public void RegisterTask(TaskData newTask)
     {
-        InitializeFirebase();
+        //InitializeFirebase();
 
         var _userData = new UserData
         {
             Tasks = _tasks + 1
         };
 
+        newTask.Index = _tasks;
+
         var Firestore = FirebaseFirestore.DefaultInstance;
         Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).SetAsync(_userData);
-        Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: _tasks.ToString()).SetAsync(newTask);
+        Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: newTask.Index.ToString()).SetAsync(newTask);
     }
 
-    public IEnumerator GetConflictedTaks(TaskData taskToAlocate, Action<int> OnGetConflictedTasks)
+    public void UpdateTask(TaskData taskToUpdate)
     {
-        InitializeFirebase();
+        //InitializeFirebase();
 
-        int count = 0;
-
-        if(taskToAlocate.isFix)
-        {
-            DateTime startDateTime = new DateTime(int.Parse(taskToAlocate.Year), int.Parse(taskToAlocate.Month), int.Parse(taskToAlocate.Day),
-                                        taskToAlocate.Hour, taskToAlocate.Min, 0);
-
-            DateTime endDateTime = new DateTime(int.Parse(taskToAlocate.YearTo), int.Parse(taskToAlocate.MonthTo), int.Parse(taskToAlocate.DayTo),
-                                        taskToAlocate.Hour, taskToAlocate.Min, 0);
-
-            DateTime currentTime = startDateTime;
-
-            while (currentTime <= endDateTime)
-            {
-                if(RepeatInDayOfWeek(taskToAlocate.RepeatDays, currentTime.DayOfWeek))
-                {
-                    yield return StartCoroutine(GetConflictedTaskInDay(taskToAlocate, currentTime, (x) => count = x));
-                }
-
-                currentTime.AddDays(1);
-            }
-        }
-        else
-        {
-            DateTime targetStartTime = new DateTime(int.Parse(taskToAlocate.Year), int.Parse(taskToAlocate.Month), int.Parse(taskToAlocate.Day),
-                                            taskToAlocate.Hour, taskToAlocate.Min, 0);
-
-            yield return StartCoroutine(GetConflictedTaskInDay(taskToAlocate, targetStartTime, (x) => count = x));
-        }
-
-        OnGetConflictedTasks?.Invoke(count);
+        var Firestore = FirebaseFirestore.DefaultInstance;
+        Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: taskToUpdate.Index.ToString()).SetAsync(taskToUpdate);
     }
 
-    private IEnumerator GetConflictedTaskInDay(TaskData taskToAlocate, DateTime targetStartTime, Action<int> OnGetConflictedTasks)
+    public IEnumerator GetConflictedTaks(TaskData taskToAlocate, Action<List<TaskData>> OnGetConflictedTasks)
+    {
+        //InitializeFirebase();
+
+        List<TaskData> conflictedTasks = new List<TaskData>();
+
+        yield return StartCoroutine(GetConflictedTaskInDay(taskToAlocate, (x) => conflictedTasks = x));
+
+        OnGetConflictedTasks?.Invoke(conflictedTasks);
+    }
+
+    private IEnumerator GetConflictedTaskInDay(TaskData taskToAlocate, Action<List<TaskData>> OnGetConflictedTasks)
     {
         var Firestore = FirebaseFirestore.DefaultInstance;
-        int count = 0;
+        List<TaskData> conflictedTasks = new List<TaskData>();
 
-        var query = GetTaskCollection(Firestore).WhereEqualTo("Day", targetStartTime.Day);
+        var query = GetTaskCollection(Firestore).WhereNotEqualTo("Index", taskToAlocate.Index);
         bool finishThread = false;
 
         query.GetSnapshotAsync().ContinueWithOnMainThread(querySnapshot =>
         {
             Assert.IsNotNull(querySnapshot);
 
-            DateTime targetEndTime = targetStartTime.AddHours(taskToAlocate.HourDuration).AddMinutes(taskToAlocate.MinutesDuration);
-
             var resultsList = querySnapshot.Result.ToList();
             foreach (DocumentSnapshot result in resultsList)
             {
                 TaskData task = result.ConvertTo<TaskData>();
 
-                DateTime start = new DateTime(int.Parse(task.Year), int.Parse(task.Month), int.Parse(task.Day), task.Hour, task.Min, 0);
-                DateTime end = start.AddHours(task.HourDuration).AddMinutes(task.MinutesDuration);
+                if (task.StartTime >= taskToAlocate.EndTime) continue;
+                if (task.EndTime <= taskToAlocate.StartTime) continue;
 
-                if (start >= targetEndTime) continue;
-                if (end <= targetStartTime) continue;
-
-                count++;
+                conflictedTasks.Add(task);
             }
 
             finishThread = true;
@@ -122,7 +101,7 @@ public class TaskRegisterer : MonoBehaviour
 
         yield return new WaitUntil(() => finishThread == true);
 
-        OnGetConflictedTasks?.Invoke(count);
+        OnGetConflictedTasks?.Invoke(conflictedTasks);
     }
 
     private CollectionReference GetTaskCollection(FirebaseFirestore Firestore)
@@ -133,29 +112,6 @@ public class TaskRegisterer : MonoBehaviour
     private string GetUserID()
     {
         return _auth.CurrentUser.UserId.ToString();
-    }
-
-    private bool RepeatInDayOfWeek(string repeatDays, DayOfWeek dayOfWeek)
-    {
-        switch (dayOfWeek)
-        {
-            case DayOfWeek.Monday:
-                return repeatDays[0] == '1';
-            case DayOfWeek.Tuesday:
-                return repeatDays[1] == '1';
-            case DayOfWeek.Wednesday:
-                return repeatDays[2] == '1';
-            case DayOfWeek.Thursday:
-                return repeatDays[3] == '1';
-            case DayOfWeek.Friday:
-                return repeatDays[4] == '1';
-            case DayOfWeek.Saturday:
-                return repeatDays[5] == '1';
-            case DayOfWeek.Sunday:
-                return repeatDays[6] == '1';
-        }
-
-        return false;
     }
 
     private void OnDestroy()

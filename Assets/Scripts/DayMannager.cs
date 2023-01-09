@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
-using Firebase.Firestore;
 using System.Text;
 using System.Linq;
 
@@ -86,11 +84,12 @@ public class DayMannager : MonoBehaviour
 
         return false;
     }
+
     private void CheckTasksInSpeficDate()
     {
-        var correctTasks = tasks.Where(t => t.Day == day.ToString())
-                              .Where(t => t.Month == month.ToString())
-                              .Where(t => t.Year == year.ToString()).ToList();
+        var correctTasks = tasks.Where(t => t.StartTime.Day == day)
+                              .Where(t => t.StartTime.Month == month)
+                              .Where(t => t.StartTime.Year == year).ToList();
 
         tasks = correctTasks;
     }

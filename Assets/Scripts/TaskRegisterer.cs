@@ -7,6 +7,7 @@ using System.Collections;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Unity.Notifications.Android;
 
 public class TaskRegisterer : MonoBehaviour
 {
@@ -48,7 +49,6 @@ public class TaskRegisterer : MonoBehaviour
         };
 
         newTask.Index = _tasks;
-
         var Firestore = FirebaseFirestore.DefaultInstance;
         Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).SetAsync(_userData);
         Firestore.Collection(path: "users_sheet").Document(path: GetUserID()).Collection(path: "Tasks").Document(path: newTask.Index.ToString()).SetAsync(newTask);

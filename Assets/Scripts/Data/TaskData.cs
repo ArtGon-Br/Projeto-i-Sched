@@ -1,6 +1,6 @@
 using Firebase.Firestore;
 using System;
-
+using Unity.Notifications.Android;
 [FirestoreData]
 public struct TaskData
 {
@@ -21,4 +21,7 @@ public struct TaskData
 
     [FirestoreProperty]
     public int Index { get; set; }
+    
+    [FirestoreProperty]
+    public int MyNotificationID {get; set;} 
 }

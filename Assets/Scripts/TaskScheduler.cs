@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using Unity.Notifications.Android;
 
 public class TaskScheduler : MonoBehaviour
 {
@@ -36,11 +37,12 @@ public class TaskScheduler : MonoBehaviour
         {
             // TODO: Aqui fazer instanciar uma mensagem que mostre
             // 1. A tarefa alocada e a data que ela foi alocada
-            // 2. A lista de todas as tarefas que foram realocadas, mostrando o horário novo delas
+            // 2. A lista de todas as tarefas que foram realocadas, mostrando o horï¿½rio novo delas
 
             foreach (TaskData realloc in _reallocatedTasks)
             {
                 print($"Tarefa [{realloc.Name}] foi realocada para: {realloc.StartTime}");
+                FindObjectOfType<NotificationController>().UpdateNotification(realloc);
             }
         }
     }

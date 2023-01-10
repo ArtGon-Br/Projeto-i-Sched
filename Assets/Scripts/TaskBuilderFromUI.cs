@@ -21,8 +21,13 @@ public class TaskBuilderFromUI : MonoBehaviour
         DateTime endTime = DateTime.UtcNow;
         endTime = endTime.AddHours(int.Parse(_hourDurationField.inputText.text));
         endTime = endTime.AddMinutes(int.Parse(_minDurationField.inputText.text));
-        var notification = FindObjectOfType<NotificationController>().CreateNotification(DateTime.UtcNow, _nameField.inputText.text, "Sua tarefa esta começando");
-        int id = AndroidNotificationCenter.SendNotification(notification, "idChannel");
+        var notificationController = FindObjectOfType<NotificationController>();
+        int id = 0;
+        if (notificationController != null)
+        {
+            var notification = notificationController.CreateNotification(DateTime.UtcNow, _nameField.inputText.text, "Sua tarefa esta começando");
+            id = AndroidNotificationCenter.SendNotification(notification, "idChannel");
+        }
 
         TaskData newTask = new TaskData
         {

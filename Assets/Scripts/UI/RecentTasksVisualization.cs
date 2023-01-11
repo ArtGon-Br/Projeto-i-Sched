@@ -11,6 +11,7 @@ using Michsky.UI.ModernUIPack;
 public class RecentTasksVisualization : MonoBehaviour
 {
     private int days = 1;
+    private DateTime Now;
     List<TaskData> recentTasks;
 
     [SerializeField] int MaxTasks;
@@ -39,19 +40,20 @@ public class RecentTasksVisualization : MonoBehaviour
         waiting.SetActive(true);
 
         days = 1;
-        Query.SearchForExistentTasks(SetDateToString(), "Data");
+        Now = DateTime.Now;
+        Query.SearchForExistentTasksThroughDate(Now.Date);
 
         yield return new WaitUntil(() => Query.searchingEnd);
         
         recentTasks = Query.GetTasksFounded();
 
         if (recentTasks.Count >= MaxTasks) InstantiateTasks();
-        else StartCoroutine(SearchForMoreDays());
+        else StartCoroutine(SearchForMoreDays(Now.AddDays(1)));
     }
 
-    IEnumerator SearchForMoreDays()
+    IEnumerator SearchForMoreDays(DateTime day)
     {
-        Query.SearchForExistentTasks(SetDateToString(days), "Data");
+        Query.SearchForExistentTasksThroughDate(day);
 
         yield return new WaitUntil(() => Query.searchingEnd);
         var arrayTasks = Query.GetTasksFounded();
@@ -63,9 +65,9 @@ public class RecentTasksVisualization : MonoBehaviour
             if (recentTasks.Count >= MaxTasks) break;
         }
 
-        days++;
+        day = day.AddDays(1);
         if (days > 7 || recentTasks.Count >= MaxTasks) InstantiateTasks();
-        else StartCoroutine(SearchForMoreDays());
+        else StartCoroutine(SearchForMoreDays(day));
     }
 
     private void InstantiateTasks()
@@ -76,49 +78,6 @@ public class RecentTasksVisualization : MonoBehaviour
         {
             var obj = Instantiate(prefabTask, parentTransformForInstantation);
             obj.SetTask(task, true);
-        }
-    }
-
-    private string SetDateToString(int acrescimo = default)
-    {
-        int day = DateTime.Now.Day + acrescimo;
-        int month = DateTime.Now.Month;
-        int year = DateTime.Now.Year;
-
-        DayCorrection(ref day, ref month, ref year);
-
-        var builder = new StringBuilder();
-        if (day < 10) builder.Append("0");
-        builder.Append($"{day}/");
-        if (month < 10) builder.Append("0");
-        builder.Append($"{month}/");
-        builder.Append(year.ToString());
-        
-        return builder.ToString();
-    }
-
-    private void DayCorrection(ref int day, ref int month, ref int year)
-    {
-        if(day > 28 && month == 2)
-        {
-            day = day - 28;
-            month++;
-        }
-        else if(day > 30 && month % 2 == 0)
-        {
-            day = day - 30;
-            month++;
-        }
-        else if(day > 31 && month % 2 == 1)
-        {
-            day = day - 31;
-            month++;
-        }
-
-        if (month > 12)
-        {
-            month = month - 12;
-            year++;
         }
     }
 }

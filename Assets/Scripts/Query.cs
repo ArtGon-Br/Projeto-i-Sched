@@ -101,7 +101,7 @@ public class Query : MonoBehaviour
     }
 
     #region Static
-    public static void SearchForExistentTasks(string input, string type)
+    public static void SearchForExistentTasksThroughDate(DateTime date)
     {
         var auth = FirebaseAuth.DefaultInstance;
         var Db = FirebaseFirestore.DefaultInstance;
@@ -112,31 +112,25 @@ public class Query : MonoBehaviour
 
         CollectionReference trfRef = Db.Collection(path: "users_sheet").Document(path: auth.CurrentUser.UserId.ToString()).Collection(path: "Tasks");
 
-        if (type == "Data")
+        Firebase.Firestore.Query query = trfRef;
+
+        query.GetSnapshotAsync().ContinueWith((querySnapshotTask) =>
         {
-            var inputs = input.Split('/');
-            Firebase.Firestore.Query query = trfRef;
+            if (querySnapshotTask.IsCanceled) return;
 
-            query.GetSnapshotAsync().ContinueWith((querySnapshotTask) =>
+            List<DocumentSnapshot> tasksFound;
+            
+            tasksFound = querySnapshotTask.Result.Documents.Where(t => DateTime.Parse(t.ToDictionary()["StartTime"].ToString()).Date == date).ToList();
+
+            if (tasksFound.Count > 0) print($"{date} > {tasksFound.Count}");
+            foreach (var t in tasksFound)
             {
-                if (querySnapshotTask.IsCanceled) return;
-
-                List<DocumentSnapshot> tasksFound;
-                tasksFound = querySnapshotTask.Result.Documents.Where(t => t.ToDictionary()["Day"].ToString() == inputs[0])
-                                                               .Where(t => t.ToDictionary()["Month"].ToString() == inputs[1])
-                                                               .Where(t => t.ToDictionary()["Year"].ToString() == inputs[2]).ToList();
-
-                if(tasksFound.Count > 0) print($"{input} > {tasksFound.Count}");
-                foreach (var t in tasksFound)
-                {
-                    Dictionary<string, object> details = t.ToDictionary();
-                    TaskData task = SetNewTask(details);
-                    tasksFounded.Add(task);
-                }
-                searchingEnd = true;
-            });
-        }
-
+                Dictionary<string, object> details = t.ToDictionary();
+                TaskData task = SetNewTask(details);
+                tasksFounded.Add(task);
+            }
+            searchingEnd = true;
+        });
     }
 
     public static List<TaskData> GetTasksFounded() 

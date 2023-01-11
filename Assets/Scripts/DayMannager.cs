@@ -55,34 +55,17 @@ public class DayMannager : MonoBehaviour
     
     private IEnumerator UpdateDay()
     {
-        StringBuilder builder = new StringBuilder();
-        builder.Append(day.ToString());
-        builder.Append("/");
-        builder.Append(month.ToString());
-        builder.Append("/");
-        builder.Append(year.ToString());
+        var date = new DateTime(year, month, day);
 
-        Query.SearchForExistentTasks(builder.ToString(), "Data");
+        Query.SearchForExistentTasksThroughDate(date);
         yield return new WaitUntil(() => Query.searchingEnd);
 
         tasks = new List<TaskData>(Query.GetTasksFounded());
         CheckTasksInSpeficDate();
         taskCount = tasks.Count;
 
-        SetUI(tasks.Count > 0 && !isDayPassed(), isDayPassed());
-    }
-
-    private bool isDayPassed()
-    {
-        int _year = DateTime.Now.Year;
-        int _month = DateTime.Now.Month;
-        int _day = DateTime.Now.Day;
-
-        if (year < _year) return true;
-        if (month < _month && year == _year) return true;
-        if (day < _day && month == _month && year == _year) return true;
-
-        return false;
+        var temp = DateTime.Now.Date <= date;
+        SetUI(tasks.Count > 0 && temp, temp);
     }
 
     private void CheckTasksInSpeficDate()

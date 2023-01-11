@@ -138,6 +138,7 @@ MonoBehaviour:
   year: 0
   day: 0
   month: 0
+  taskCount: 0
 --- !u!1 &2365508977087286188
 GameObject:
   m_ObjectHideFlags: 0

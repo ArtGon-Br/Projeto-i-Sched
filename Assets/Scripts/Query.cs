@@ -34,15 +34,20 @@ public class Query : MonoBehaviour
         deleteClones();
 
         CollectionReference trfRef = db.Collection("tarefas");
+
+        trfRef = db.Collection("users_sheet").Document(FirebaseAuth.DefaultInstance.CurrentUser.UserId).Collection("Tasks");
+
+        Debug.Log("CAMINHO: " + trfRef);
+
         trfRef.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
         {
             foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
             {
-                InstantiateTasks(documentSnapshot); 
+                InstantiateTasks(documentSnapshot);
             }
         });
-    } 
-
+    }
+    
     //create trigram from string
     public string[] triGram(string str) {
         List<string> trigrams = new List<string>();
@@ -94,9 +99,9 @@ public class Query : MonoBehaviour
 
         Transform taskTransform = Instantiate(task, viewport);
 
-        taskTransform.Find("Data").GetComponent<TMP_Text>().text = details["Data"].ToString();
-        taskTransform.Find("Hora").GetComponent<TMP_Text>().text = details["Hora"].ToString();
-        taskTransform.Find("Texto").GetComponent<TMP_Text>().text = details["Texto"].ToString();
+        taskTransform.Find("Data").GetComponent<TMP_Text>().text = details["StartTime"].ToString();
+        taskTransform.Find("Hora").GetComponent<TMP_Text>().text = details["Name"].ToString();
+        taskTransform.Find("Texto").GetComponent<TMP_Text>().text = details["Description"].ToString();
         taskTransform.gameObject.SetActive(true);
     }
 

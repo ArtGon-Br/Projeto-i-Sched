@@ -11,7 +11,7 @@ public class Query : MonoBehaviour
 {
     [SerializeField] TMP_InputField input;
     [SerializeField] Transform viewport;
-    [SerializeField] Transform task;
+    [SerializeField] QueryViewUI queryViewUIPrefab;
     static FirebaseFirestore db;
     Transform[] clones;
 
@@ -21,10 +21,8 @@ public class Query : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Initializing querry module...");
+        Debug.Log("Initializing query module...");
         db = FirebaseFirestore.DefaultInstance;
-
-        task.gameObject.SetActive(false);
 
         GetFirstData();
     }
@@ -71,8 +69,8 @@ public class Query : MonoBehaviour
 
         Debug.Log(string.Format("Querying by {0}...", char.ToUpper(inputText[0]) + inputText.Substring(1)));
         CollectionReference trfRef = db.Collection("tarefas");
-        // Array.ForEach(triGram(char.ToUpper(inputText[0]) + inputText.Substring(1)), Debug.Log);
-        Firebase.Firestore.Query query = trfRef.WhereEqualTo("Texto", char.ToUpper(inputText[0]) + inputText.Substring(1));
+        // Array.ForEach(triGram(char.ToUpper(inputText[0]) + inputText.Substring(1)), Debug.Log);        
+        Firebase.Firestore.Query query = trfRef.WhereEqualTo("Name", char.ToUpper(inputText[0]) + inputText.Substring(1));
         query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
         {
             foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
@@ -97,12 +95,10 @@ public class Query : MonoBehaviour
         Debug.Log(string.Format("Document {0} returned by query Texto={1}", documentSnapshot.Id, input.text.ToString()));
         Dictionary<string, object> details = documentSnapshot.ToDictionary();
 
-        Transform taskTransform = Instantiate(task, viewport);
-
-        taskTransform.Find("Data").GetComponent<TMP_Text>().text = details["StartTime"].ToString();
-        taskTransform.Find("Hora").GetComponent<TMP_Text>().text = details["Name"].ToString();
-        taskTransform.Find("Texto").GetComponent<TMP_Text>().text = details["Description"].ToString();
-        taskTransform.gameObject.SetActive(true);
+        QueryViewUI queryView = Instantiate(queryViewUIPrefab, viewport);
+        Timestamp timeStamp = (Timestamp)details["StartTime"];
+        DateTime dateTime = timeStamp.ToDateTime();
+        queryView.UpdateText(dateTime, details["Name"].ToString());
     }
 
     #region Static

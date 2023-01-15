@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -65,7 +66,7 @@ public class LoginAuth : MonoBehaviour
         }
     }
 
-    void HandleLoginErrors(System.AggregateException loginException){
+    void HandleLoginErrors(AggregateException loginException){
         Debug.LogWarning(message: $"failed to login task with {loginException}");
         FirebaseException firebaseEx = loginException.GetBaseException() as FirebaseException;
         AuthError errorCode = (AuthError)firebaseEx.ErrorCode;

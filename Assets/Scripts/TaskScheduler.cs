@@ -2,17 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
-using Unity.Notifications.Android;
 
 public class TaskScheduler : MonoBehaviour
 {
     [SerializeField] TaskRegisterer _registerer;
     [SerializeField] TaskBuilderFromUI _taskBuilder;
+    [SerializeField] private GameObject _allocatingUI;
+    [SerializeField] private GameObject _normalView;
+    [SerializeField] private UIElement _uiElement;
 
     [Header("Messages")]
-    [SerializeField] GameObject createdTask;
+    [SerializeField] CreateTaskMessage createdTask;
     [SerializeField] GameObject dayCommomTask;
 
     private List<TaskData> _reallocatedTasks = new List<TaskData>();
@@ -22,16 +23,24 @@ public class TaskScheduler : MonoBehaviour
         _reallocatedTasks.Clear();
 
         var task = _taskBuilder.BuildTaskFromUI();
+        ChangeUIToAllocating();
         StartCoroutine(ProccessAllocation(task, () => HandleFinishAllocation(task)));
+    }
 
+    private void ChangeUIToAllocating()
+    {
+        _allocatingUI.SetActive(true);
+        _normalView.SetActive(false);
     }
 
     private void HandleFinishAllocation(TaskData allocatedTask)
     {
+        CreateTaskMessage newTask = Instantiate(createdTask);
+        newTask.UpdateUI(allocatedTask, _reallocatedTasks);
+        _uiElement.Hide();
         if (_reallocatedTasks.Count == 0)
         {
             print("Tarefa criada no servidor");
-            Instantiate(createdTask);
         }
         else
         {
@@ -45,6 +54,7 @@ public class TaskScheduler : MonoBehaviour
                 FindObjectOfType<NotificationController>().UpdateNotification(realloc);
             }
         }
+        _uiElement.Hide();
     }
 
     IEnumerator ProccessAllocation(TaskData task, Action OnFinishAllocation = null)

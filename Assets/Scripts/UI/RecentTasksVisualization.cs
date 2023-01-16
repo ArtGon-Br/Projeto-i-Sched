@@ -7,10 +7,15 @@ using System.Text;
 using UnityEngine;
 using UnityEditor.PackageManager.UI;
 using Michsky.UI.ModernUIPack;
+using Firebase.Auth;
+using Firebase.Firestore;
+using Firebase.Extensions;
+using UnityEditor.VersionControl;
 
 public class RecentTasksVisualization : MonoBehaviour
 {
     private int days = 1;
+    private bool searchingEnd;
     private DateTime Now;
     List<TaskData> recentTasks;
 
@@ -41,43 +46,78 @@ public class RecentTasksVisualization : MonoBehaviour
 
         days = 1;
         Now = DateTime.Now;
-        Query.SearchForExistentTasksThroughDate(Now.Date);
+        recentTasks = new List<TaskData>();
+        searchingEnd= false;
 
-        yield return new WaitUntil(() => Query.searchingEnd);
-        
-        recentTasks = Query.GetTasksFounded();
+        SearchForExistentTasksThroughDate(Now.Date);
 
-        if (recentTasks.Count >= MaxTasks) InstantiateTasks();
+        yield return new WaitUntil(() => searchingEnd);
+
+        if (recentTasks.Count >= MaxTasks) yield return null;
         else StartCoroutine(SearchForMoreDays(Now.AddDays(1)));
     }
 
     IEnumerator SearchForMoreDays(DateTime day)
     {
-        Query.SearchForExistentTasksThroughDate(day);
+        SearchForExistentTasksThroughDate(day);
 
-        yield return new WaitUntil(() => Query.searchingEnd);
-        var arrayTasks = Query.GetTasksFounded();
-
-        int lenght = arrayTasks.Count;
-        for (int i = 0; i < lenght; i++)
-        {
-            recentTasks.Add(arrayTasks[i]);
-            if (recentTasks.Count >= MaxTasks) break;
-        }
+        yield return new WaitUntil(() => searchingEnd);
 
         day = day.AddDays(1);
-        if (days > 7 || recentTasks.Count >= MaxTasks) InstantiateTasks();
+        if (days > 7 || recentTasks.Count >= MaxTasks) yield return null;
         else StartCoroutine(SearchForMoreDays(day));
     }
 
-    private void InstantiateTasks()
+    void SearchForExistentTasksThroughDate(DateTime date)
     {
-        waiting.SetActive(false);
-        print(recentTasks.Count);
-        foreach (TaskData task in recentTasks)
+        var auth = FirebaseAuth.DefaultInstance;
+        var Db = FirebaseFirestore.DefaultInstance;
+
+        CollectionReference trfRef = Db.Collection(path: "users_sheet").Document(path: auth.CurrentUser.UserId.ToString()).Collection(path: "Tasks");
+
+        Firebase.Firestore.Query query = trfRef;
+
+        query.GetSnapshotAsync().ContinueWithOnMainThread((querySnapshotTask) =>
         {
-            var obj = Instantiate(prefabTask, parentTransformForInstantation);
-            obj.SetTask(task, true);
-        }
+            if (querySnapshotTask.IsCanceled) return;
+
+            foreach (DocumentSnapshot documentSnapshot in querySnapshotTask.Result.Documents)
+            {
+                Dictionary<string, object> details = documentSnapshot.ToDictionary();
+
+                Timestamp timeStamp = (Timestamp)details["StartTime"];
+                DateTime dateTime = timeStamp.ToDateTime();
+
+                if (date.ToShortDateString() == dateTime.ToShortDateString())
+                {
+                    InstantiateTasks(documentSnapshot);
+                    //recentTasks.Add(task);
+                }
+            }
+
+            searchingEnd = true;
+        });
+    }
+    private void InstantiateTasks(DocumentSnapshot documentSnapshot)
+    {
+        Dictionary<string, object> details = documentSnapshot.ToDictionary();
+        TaskData task = new TaskData();
+        task.Name = details["Name"].ToString();
+        task.Description = details["Description"].ToString();
+
+        Timestamp timeStamp = (Timestamp)details["StartTime"];
+        DateTime dateTime = timeStamp.ToDateTime();
+
+        task.StartTime = dateTime;
+
+        timeStamp = (Timestamp)details["EndTime"];
+        dateTime = timeStamp.ToDateTime();
+
+        task.EndTime = dateTime;
+
+        var obj = Instantiate(prefabTask, parentTransformForInstantation);
+        obj.SetTask(task, true);
+
+        waiting.SetActive(false);
     }
 }

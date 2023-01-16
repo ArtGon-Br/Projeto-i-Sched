@@ -60,9 +60,7 @@ public class CalendarController : MonoBehaviour
 
             if (day.AddDays(i - _firstDayOfMonth).Month != day.Month)
             {
-                Days[i].GetComponent<Image>().color = new Color(255f, 255f, 255f, 0.5f);
-                Days[i].interactable = false;
-                temp.color = new Color(255f, 255f, 255f, 0.5f);
+                temp.color = new Color(255f, 255f, 255f, 0.4f);
             }
             else
             {

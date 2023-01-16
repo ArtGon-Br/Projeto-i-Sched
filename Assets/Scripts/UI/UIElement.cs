@@ -5,10 +5,17 @@ public class UIElement : MonoBehaviour
     Animator animator;
 
     bool isVisible = false;
+    [SerializeField] bool enabledTimingToDisable;
+    [SerializeField] float timeToDisable;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+    }
+
+    private void OnEnable()
+    {
+        if (enabledTimingToDisable) Invoke("DisableObject", timeToDisable);
     }
 
     public void Show()
@@ -33,5 +40,10 @@ public class UIElement : MonoBehaviour
     {
         if (isVisible) Hide();
         else Show();
+    }
+
+    public void DisableObject()
+    {
+        gameObject.SetActive(false);
     }
 }
